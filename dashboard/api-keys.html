@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Keys - BOG Cloud</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<script>(function(){ const saved = localStorage.getItem('bog-theme'); if(saved === 'dark') document.documentElement.classList.add('dark');})();</script>
+<style>
+  :root{ --blue: #4285F4; --red: #EA4335; --bg: #E8F0FE; --white: #FFFFFF; --gray-900: #202124; --gray-700: #5F6368; --gray-100: #F1F3F4; --sidebar-bg: #FFFFFF; --card-bg: #FFFFFF; --border: #DADCE0;}
+  :root.dark{ --bg: #202124; --white: #292A2D; --gray-900: #E8EAED; --gray-700: #9AA0A6; --gray-100: #202124; --sidebar-bg: #292A2D; --card-bg: #292A2D; --border: #5F6368;}
+  *{margin:0;padding:0;box-sizing:border-box;font-family: 'Roboto', Arial, sans-serif;}
+  body{background: linear-gradient(135deg, #E8F0FE 0%, #D2E3FC 100%); min-height:100vh; color:var(--gray-900);}
+.topbar{height:64px;background:var(--white);display:flex;align-items:center;justify-content:space-between;padding:0 16px;position:sticky;top:0;z-index:100;box-shadow:0 1px 2px rgba(0,0,0,.1);}
+.topbar-left{display:flex;align-items:center;gap:24px;}
+.hamburger{background:none;border:none;font-size:24px;cursor:pointer;color:var(--gray-700);padding:8px;}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--gray-900);}
+.logo-img{width:40px;height:40px;object-fit:cover;border-radius:50%;}
+.logo span{font-size:22px;font-weight:400;}
+.search-bar{flex:1;max-width:720px;margin:0 32px;background:var(--gray-100);border-radius:8px;padding:10px 16px;border:none;font-size:14px;}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.icon-btn{background:none;border:none;font-size:14px;cursor:pointer;color:var(--gray-700);padding:8px 12px;border-radius:8px;}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--blue);color:var(--white);display:grid;place-items:center;font-weight:500;font-size:14px;cursor:pointer;}
+.container{display:flex;}
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:90;}
+.overlay.open{display:block;}
+.sidebar{width:280px;background:var(--sidebar-bg);padding:16px 8px;height:calc(100vh - 64px);position:fixed;top:64px;left:0;overflow-y:auto;z-index:95;transition:transform 0.3s;}
+.sidebar.open{transform:translateX(0);}
+.nav-link{display:flex;align-items:center;gap:24px;padding:10px 24px;border-radius:0 24px 24px 0;color:var(--gray-700);text-decoration:none;font-size:14px;font-weight:500;margin-right:12px;}
+.nav-link:hover{background:var(--gray-100);}
+.nav-link.active{background:#E8F0FE;color:var(--blue);font-weight:500;}
+.nav-title{font-size:11px;font-weight:600;color:var(--gray-700);text-transform:uppercase;letter-spacing:0.5px;margin:16px 0 8px 24px;}
+.nav-ico{width:24px;height:24px;fill:currentColor;}
+.main{flex:1;padding:32px;margin-left:280px;}
+.card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:24px;box-shadow:0 1px 2px rgba(60,64,67,.1);margin-bottom:24px;}
+.btn-primary{background:var(--blue); color:white; border:none; padding:10px 24px; border-radius:8px; cursor:pointer; font-weight:500;}
+.btn-primary:disabled{opacity:0.5; cursor:not-allowed;}
+.key-box{background:var(--gray-100); border:1px solid var(--border); padding:16px; border-radius:8px; margin-bottom:12px;}
+.key-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;}
+.key-actions{display:flex; gap:8px; flex-wrap:wrap;}
+.key-value{font-family:monospace; font-size:13px; background:var(--white); padding:8px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--border);}
+.btn-copy{background:var(--blue); color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:13px;}
+.btn-danger{background:var(--red); color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:13px;}
+.btn-secondary{background:var(--gray-100); color:var(--gray-900); border:1px solid var(--border); padding:6px 12px; border-radius:6px; cursor:pointer; font-size:13px;}
+.error-box{background:#FCE8E6; color:var(--red); padding:16px; border-radius:8px; margin-bottom:16px;}
+.spinner{border:3px solid var(--gray-100); border-top:3px solid var(--blue); border-radius:50%; width:24px; height:24px; animation:spin 1s linear infinite; margin:0 auto;}
+ @keyframes spin{0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);}}
+  @media(max-width:1024px){.sidebar{transform:translateX(-100%);}.main{margin-left:0;}.search-bar{display:none;}}
+</style>
+</head>
+<body>
+  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" onclick="toggleSidebar()">☰</button>
+      <a href="dashboard.html" class="logo">
+        <img src=" /images/logo.jpeg" class="logo-img" onerror="this.src='https://placehold.co/40x40/4285F4/FFFFFF?text=B'">
+        <span>BOG Cloud</span>
+      </a>
+    </div>
+    <input type="text" class="search-bar" placeholder="Search in BOG Cloud">
+    <div class="topbar-right">
+      <button class="icon-btn" id="themeToggle">Dark</button>
+      <div class="avatar" id="userAvatar">U</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="sidebar" id="sidebar">
+      <a href="dashboard.html" class="nav-link"><svg class="nav-ico" viewBox="0 0 24 24"><path d="M10 4H4c-1.11 0-2.89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/></svg> My Drive</a>
+      <a href="vault.html" class="nav-link"><svg class="nav-ico" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg> Vault</a>
+      <a href="trash.html" class="nav-link"><svg class="nav-ico" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg> Trash</a>
+      <div class="nav-title">DEVELOPER</div>
+      <a href="api-keys.html" class="nav-link active"><svg class="nav-ico" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg> API Keys</a>
+      <a href="api-docs.html" class="nav-link"><svg class="nav-ico" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> API Docs</a>
+      <div class="nav-title">ACCOUNT</div>
+      <a href="profile.html" class="nav-link"><svg class="nav-ico" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> Profile</a>
+      <a href="billing.html" class="nav-link"><svg class="nav-ico" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg> Billing</a>
+    </div>
+
+    <div class="main" id="main">
+      <h2 style="font-weight:400;font-size:24px;margin-bottom:8px;">API Keys</h2>
+      <p style="color:var(--gray-700);margin-bottom:24px;">Use these keys to access BOG Cloud API from your apps and scripts</p>
+      <button class="btn-primary" id="genBtn" onclick="generateKey()">+ Generate New Key</button>
+
+      <div class="card" style="margin-top:24px;">
+        <h3 style="font-size:16px;margin-bottom:16px;">Your Active Keys</h3>
+        <div id="errorBox"></div>
+        <div id="keysList"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+const API_BASE = "https://api.bogcloud.com/v1"; // CHANGE THIS
+let idToken = null; let keysData = [];
+
+const firebaseConfig = {apiKey: "AIzaSyD7Ve_lk5waFwPNcQwHxM9DpYFkeEsQa74",authDomain: "bog-cloud.firebaseapp.com",projectId: "bog-cloud",storageBucket: "bog-cloud.appspot.com",messagingSenderId: "219071508992",appId: "1:219071508992:web:42516a44ed5d2f6a59dee5"};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.toggleSidebar = () => {document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open');}
+document.getElementById('themeToggle').onclick = () => { document.documentElement.classList.toggle('dark'); localStorage.setItem('bog-theme', document.documentElement.classList.contains('dark')? 'dark' : 'light'); document.getElementById('themeToggle').textContent = document.documentElement.classList.contains('dark')? 'Light' : 'Dark'; }
+document.getElementById('themeToggle').textContent = document.documentElement.classList.contains('dark')? 'Light' : 'Dark';
+
+window.copyKey = (btn, key) => { navigator.clipboard.writeText(key); btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy'; }, 2000); }
+window.toggleKey = (id) => {
+  const keyEl = document.getElementById(`key-${id}`); const btn = document.getElementById(`toggle-${id}`);
+  const key = keysData.find(k => k.id === id).key;
+  if(keyEl.textContent.includes('•')){ keyEl.textContent = key; btn.textContent = 'Hide'; }
+  else { keyEl.textContent = `••••••••${key.slice(-4)}`; btn.textContent = 'Show'; }
+}
+
+async function apiFetch(url, options = {}){
+  try{
+    document.getElementById('genBtn').disabled = true;
+    const res = await fetch(url, {...options, headers: {...options.headers, 'Authorization': `Bearer ${idToken}`}});
+    if(!res.ok) throw new Error(await res.text());
+    return await res.json();
+  } catch(e){
+    console.error("API Error:", e);
+    document.getElementById('errorBox').innerHTML = `<div class="error-box"><b>Backend Error:</b> ${e.message}. Is your API running and CORS enabled?</div>`;
+    document.getElementById('keysList').innerHTML = '<p style="color:var(--gray-700);">Failed to load keys.</p>';
+  } finally { document.getElementById('genBtn').disabled = false; }
+}
+
+window.generateKey = async () => {
+  const name = prompt("Name this API Key:"); if(!name) return;
+  const data = await apiFetch(`${API_BASE}/keys`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name}) });
+  if(data){ showKeyModal(data.key); loadKeys(); }
+}
+window.regenerateKey = async (id) => {
+  if(!confirm("Regenerate? Old key will stop working.")) return;
+  const data = await apiFetch(`${API_BASE}/keys/${id}/regenerate`, { method: 'POST' });
+  if(data){ showKeyModal(data.key); loadKeys(); }
+}
+window.renameKey = async (id, oldName) => {
+  const name = prompt("New name:", oldName); if(!name || name === oldName) return;
+  const data = await apiFetch(`${API_BASE}/keys/${id}`, { method: 'PATCH', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name}) });
+  if(data) loadKeys();
+}
+window.revokeKey = async (id) => {
+  if(!confirm("Revoke this key?")) return;
+  const data = await apiFetch(`${API_BASE}/keys/${id}`, { method: 'DELETE' });
+  if(data) loadKeys();
+}
+
+function showKeyModal(key){
+  const modal = document.createElement('div');
+  modal.innerHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:grid;place-items:center;z-index:999;">
+    <div class="card" style="width:90%;max-width:500px;"><h3>Your New API Key</h3>
+    <p style="color:var(--gray-700);margin:8px 0 16px 0;">Copy this key now. You won't be able to see it again.</p>
+    <div class="key-value"><code style="word-break:break-all;">${key}</code><button class="btn-copy" onclick="copyKey(this, '${key}')">Copy</button></div>
+    <button class="btn-primary" style="width:100%;margin-top:16px;" onclick="this.closest('div[style*=fixed]').remove();">Done</button></div></div>`;
+  document.body.appendChild(modal);
+}
+
+async function loadKeys(){
+  document.getElementById('keysList').innerHTML = '<div class="spinner"></div>';
+  document.getElementById('errorBox').innerHTML = '';
+  keysData = await apiFetch(`${API_BASE}/keys`) || [];
+  let html = '';
+  keysData.forEach(k => {
+    html += `<div class="key-box"><div class="key-header"><b>${k.name}</b><div class="key-actions">
+      <button class="btn-secondary" onclick="renameKey('${k.id}', '${k.name}')">Rename</button>
+      <button class="btn-secondary" onclick="regenerateKey('${k.id}')">Regenerate</button>
+      <button class="btn-danger" onclick="revokeKey('${k.id}')">Revoke</button></div></div>
+      <div class="key-value"><span id="key-${k.id}">••••${k.key.slice(-4)}</span>
+      <button id="toggle-${k.id}" class="btn-copy" onclick="toggleKey('${k.id}')">Show</button></div>
+      <div style="font-size:12px;color:var(--gray-700);margin-top:8px;">
+      Created: ${new Date(k.createdAt).toLocaleDateString()} • Last used: ${k.lastUsed? new Date(k.lastUsed).toLocaleDateString() : 'Never'}</div></div>`;
+  });
+  document.getElementById('keysList').innerHTML = html || '<p style="color:var(--gray-700);">No API keys yet.</p>';
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if(user){ idToken = await user.getIdToken(); document.getElementById('userAvatar').textContent = user.email[0].toUpperCase(); loadKeys(); }
+  else window.location = '/auth/login.html';
+});
+</script>
+</body>
+</html>

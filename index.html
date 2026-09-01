@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOG Cloud - Nigeria's Secure Cloud</title>
+<style>
+  :root{
+    --bog-blue: #1A73E8;
+    --bog-blue-hover: #1765CC;
+    --white: #FFFFFF;
+    --gray-800: #202124;
+    --gray-600: #5F6368;
+    --gray-100: #F1F3F4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;font-family: Roboto, Arial, sans-serif;}
+  body{background:var(--white);color:var(--gray-800);}
+  .container{max-width:1200px;margin:0 auto;padding:0 24px;}
+  
+  nav{position:sticky;top:0;background:var(--white);border-bottom:1px solid #E8EAED;z-index:100;}
+  .nav-wrap{display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .nav-left{display:flex;align-items:center;gap:16px;}
+  
+  .hamburger{display:block;background:none;border:none;font-size:28px;cursor:pointer;color:var(--gray-600);padding:8px 12px;border-radius:8px;}
+  .hamburger:hover{background:var(--gray-100);}
+  
+  .logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--gray-800);font-size:22px;font-weight:500;}
+  .nav-links{display:flex;gap:24px;}
+  .nav-links a{color:var(--gray-600);text-decoration:none;font-size:14px;font-weight:500;}
+  .nav-links a:hover{color:var(--bog-blue);}
+  .nav-right{display:flex;gap:12px;align-items:center;}
+  .btn-outline{padding:10px 24px;border:1px solid #DADCE0;border-radius:24px;background:var(--white);color:var(--gray-800);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;}
+  .btn-brand{padding:10px 24px;border:none;border-radius:24px;background:var(--bog-blue);color:var(--white);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;}
+  .btn-brand:hover{background:var(--bog-blue-hover);}
+  
+  .mobile-menu{display:none;position:absolute;top:64px;left:0;right:0;background:var(--white);border-bottom:1px solid #E8EAED;padding:24px;flex-direction:column;gap:20px;box-shadow:0 4px 12px rgba(0,0,0,0.08);}
+  .mobile-menu a{text-decoration:none;color:var(--gray-800);font-size:18px;padding:10px 0;border-bottom:1px solid #F1F3F4;}
+  .mobile-menu a:last-child{border-bottom:none;}
+  .mobile-menu.open{display:flex;}
+
+  .hero{padding:100px 0 80px;text-align:center;}
+  .hero h1{font-size:clamp(36px,5vw,48px);font-weight:400;line-height:1.2;margin-bottom:16px;}
+  .hero p{font-size:18px;color:var(--gray-600);max-width:600px;margin:0 auto 8px;line-height:1.5;}
+  .hero-cta{display:flex;gap:12px;justify-content:center;margin:32px 0;flex-wrap:wrap;}
+  .btn-large{padding:14px 32px;font-size:16px;border-radius:24px;}
+
+  .logo-img{width:32px;height:32px;object-fit:contain;}
+  .hero-logo-img{width:200px;height:auto;object-fit:contain;display:block;margin:0 auto 40px;}
+
+  .value-prop{padding:80px 0;background:var(--white);}
+  .value-prop h2{text-align:center;font-size:36px;font-weight:500;margin-bottom:16px;}
+  .value-prop .sub{ text-align:center;color:var(--gray-600);font-size:18px;max-width:700px;margin:0 auto 48px;line-height:1.6;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
+  .badge{display:inline-block;background:#E8F0FE;color:var(--bog-blue);padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600;margin-bottom:12px;}
+  .list{list-style:none;padding:0;}
+  .list li{padding-left:24px;position:relative;margin-bottom:8px;color:var(--gray-600);}
+  .list li:before{content:"✓";position:absolute;left:0;color:var(--bog-blue);font-weight:bold;}
+
+  .features{background:var(--gray-100);padding:80px 0;}
+  .features h2{text-align:center;font-size:32px;font-weight:400;margin-bottom:48px;text-transform:uppercase;letter-spacing:1px;}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .card{background:var(--white);border-radius:12px;padding:24px;box-shadow:0 1px 2px rgba(0,0,0,0.1);text-align:left;}
+  .card-ico{width:48px;height:48px;background:#E8F0FE;border-radius:12px;display:grid;place-items:center;font-size:24px;margin-bottom:16px;}
+  .price{font-size:28px;font-weight:700;margin:8px 0;color:var(--bog-blue);}
+  .whatsapp{color:var(--bog-blue);text-decoration:none;font-weight:600;}
+  footer{text-align:center;padding:40px 24px;color:var(--gray-600);font-size:14px;border-top:1px solid #E8EAED;background:var(--white);}
+
+  @media(max-width:1024px){
+    .nav-links{display:none;}
+    .nav-right .btn-outline{display:none;}
+  }
+  @media(max-width:768px){
+    .hero-logo-img{width:140px;}
+    .grid-3{grid-template-columns:1fr;}
+    .grid-2{grid-template-columns:1fr;gap:24px;}
+    .hero{padding:60px 0;}
+    .features,.value-prop{padding:60px 0;}
+  }
+</style>
+</head>
+<body>
+
+  <nav>
+    <div class="container nav-wrap">
+      <div class="nav-left">
+        <button class="hamburger" id="hamburger">☰</button>
+        <a href="index.html" class="logo"><img src="images/logo.jpeg" alt="BOG Cloud Logo" class="logo-img"> BOG Cloud</a>
+      </div>
+      <div class="nav-links">
+        <a href="#products">Products</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#contact">Contact us</a>
+        <a href="about.html">About</a>
+      </div>
+      <div class="nav-right" id="navRight">
+        <a href="auth/login.html" class="btn-outline">Login</a>
+        <a href="auth/signup.html" class="btn-brand">Start</a>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#products">Products</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#contact">Contact us</a>
+      <a href="about.html">About</a>
+      <a href="auth/login.html" style="color:var(--gray-600);">Login</a>
+      <a href="auth/signup.html" style="color:var(--bog-blue);font-weight:600;">Start</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <img src="images/logo.jpeg" alt="BOG Cloud Logo" class="hero-logo-img">
+      <h1>The new way to<br>cloud in Nigeria</h1>
+      <p>Store your files, passwords, music, and apps securely.</p>
+      <div class="hero-cta">
+        <a href="auth/signup.html" class="btn-brand btn-large">Get started</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="value-prop">
+    <div class="container">
+      <span class="badge">Made in Nigeria</span>
+      <h2>Your Private Cloud. Your Data, Protected.</h2>
+      <p class="sub">BOG Cloud is a Nigerian cloud hosting platform built for privacy first.</p>
+      <div class="grid-2">
+        <div><h3>For Individuals</h3><ul class="list"><li>Secure storage for images, passwords, music, and files</li></ul></div>
+        <div><h3>For Startups & Developers</h3><ul class="list"><li>Ship fintech, AI/ML, and other applications faster</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="container">
+      <h2>BOG CLOUD. YOUR INTELLIGENT CLOUD.</h2>
+      <div class="grid-3">
+        <div class="card"><div class="card-ico">🚀</div><h3>Scalable</h3><p>Auto-scale servers from Lagos to Abuja in seconds.</p></div>
+        <div class="card"><div class="card-ico">🔒</div><h3>Secure</h3><p>NDPR compliant. ISO 27001 certified.</p></div>
+        <div class="card"><div class="card-ico">⚡</div><h3>Fast</h3><p>99.99% uptime SLA. Low latency.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="products">
+    <div class="container">
+      <h2>Products</h2>
+      <div class="grid-3">
+        <div class="card"><div class="card-ico">📦</div><h3>BOG Drive</h3><p>Secure file storage with version history.</p></div>
+        <div class="card"><div class="card-ico">🔑</div><h3>BOG Vault</h3><p>Encrypted password and credential manager.</p></div>
+        <div class="card"><div class="card-ico">🎵</div><h3>BOG Media</h3><p>Private cloud for music, images, and video.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="value-prop" id="pricing">
+    <div class="container">
+      <h2>Pricing</h2>
+      <p class="sub">Simple plans. Pay only for what you use. All prices in NGN.</p>
+      <div class="grid-3">
+        <div class="card"><div class="card-ico">🌱</div><h3>Starter</h3><p class="price">₦2,500/mo</p><p>50GB storage, 1 user, basic support.</p></div>
+        <div class="card" style="border:2px solid var(--bog-blue);"><div class="card-ico">🚀</div><h3>Growth</h3><p class="price">₦7,000/mo</p><p>200GB storage, 5 users, API access.</p></div>
+        <div class="card"><div class="card-ico">🏢</div><h3>Scale</h3><p class="price">₦18,000/mo</p><p>1TB storage, unlimited users, SLA 99.99%.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="contact">
+    <div class="container">
+      <h2>Contact us</h2>
+      <div class="grid-3">
+        <div class="card"><div class="card-ico">💬</div><h3>WhatsApp</h3><p><a href="https://wa.me/2347046146228" class="whatsapp" target="_blank">0704 614 6228</a></p></div>
+        <div class="card"><div class="card-ico">📧</div><h3>Email</h3><p>support@bogcloud.ng</p></div>
+        <div class="card"><div class="card-ico">📍</div><h3>Location</h3><p>Lagos, Nigeria.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 BOG Cloud. Built in Nigeria by Sofri Clarkson Isiah Green. A Greenxchange Tech Lab Company.
+  </footer>
+
+<script>
+// ===== BACKEND CONNECTION =====
+const API_BASE = 'https://bog-cloud-1.onrender.com';
+
+async function bogAPI(endpoint, method='GET', body=null) {
+  const token = localStorage.getItem('bog_token');
+  const res = await fetch(API_BASE + endpoint, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': token ? `Bearer ${token}` : ''
+    },
+    body: body ? JSON.stringify(body) : null
+  });
+  return res.json();
+}
+
+// Mobile menu + Check login state
+document.addEventListener('DOMContentLoaded', function() {
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  if(hamburger){hamburger.onclick = () => mobileMenu.classList.toggle('open');}
+  document.querySelectorAll('.mobile-menu a').forEach(link => {link.onclick = () => mobileMenu.classList.remove('open');});
+
+  if(localStorage.getItem('bog_token')){
+    document.getElementById('navRight').innerHTML = `<a href="dashboard.html" class="btn-brand">Dashboard</a>`;
+  }
+});
+</script>
+
+</body>
+</html>

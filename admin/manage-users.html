@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOG Cloud - Manage Users</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #2563EB;
+            --light-blue: #EFF6FF;
+            --card-bg: #FFFFFF;
+            --text-dark: #1E293B;
+            --text-gray: #64748B;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --green: #16A34A;
+            --red: #DC2626;
+            --yellow: #D97706;
+        }
+
+        body.dark-mode {
+            --light-blue: #0F172A;
+            --card-bg: #1E293B;
+            --text-dark: #F1F5F9;
+            --text-gray: #94A3B8;
+            --shadow: 0 1px 3px rgba(0,0,0,0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--light-blue); color: var(--text-dark); transition: background 0.3s, color 0.3s; }
+
+        .navbar { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px 24px; box-shadow: var(--shadow); position: fixed; width: 100%; top: 0; z-index: 1000; }
+        .nav-left { display: flex; align-items: center; gap: 16px; }
+        .hamburger { font-size: 28px; background: none; border: none; color: var(--text-dark); cursor: pointer; display: flex; }
+        .logo { width: 32px; height: 32px; object-fit: contain; }
+        .navbar h1 { font-size: 18px; font-weight: 600; }
+        .nav-right { display: flex; align-items: center; gap: 12px; }
+        .theme-toggle { background: none; border: none; cursor: pointer; color: var(--text-gray); padding: 8px; border-radius: 8px; }
+        .theme-toggle:hover { background: var(--light-blue); }
+        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary-blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+
+        .container { display: flex; padding-top: 65px; }
+        .sidebar { width: 260px; background: var(--card-bg); height: calc(100vh - 65px); position: fixed; left: 0; top: 65px; box-shadow: 2px 0 10px rgba(0,0,0,0.05); transform: translateX(-100%); transition: transform 0.3s ease, background 0.3s; z-index: 999; }
+        .sidebar.active { transform: translateX(0); }
+        .sidebar ul { list-style: none; padding: 20px 0; }
+        .sidebar ul li a { display: flex; align-items: center; gap: 12px; padding: 12px 24px; color: var(--text-gray); text-decoration: none; font-weight: 500; }
+        .sidebar ul li a:hover, .sidebar ul li a.active { background: var(--light-blue); color: var(--primary-blue); }
+        .admin-menu a { background: #FEF3C7; color: #92400E !important; font-weight: 600; }
+        body.dark-mode .admin-menu a { background: #78350F; color: #FDE68A !important; }
+
+        .main-content { padding: 30px; width: 100%; }
+        .main-content h2 { font-size: 28px; margin-bottom: 8px; }
+        .main-content p { color: var(--text-gray); margin-bottom: 24px; }
+
+        .toolbar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+        .search-wrapper { position: relative; flex: 1; min-width: 250px; }
+        .search-wrapper .material-icons { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-gray); }
+        .search-box { width: 100%; padding: 10px 14px 10px 40px; border: 1px solid var(--text-gray); border-radius: 8px; background: var(--card-bg); color: var(--text-dark); }
+        .filter-btn { padding: 10px 16px; border: 1px solid var(--primary-blue); background: none; color: var(--primary-blue); border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+
+        .card { background: var(--card-bg); padding: 0; border-radius: 12px; box-shadow: var(--shadow); overflow-x: auto; }
+
+        /* FIXED ALIGNMENT TABLE */
+        .users-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .users-table th, .users-table td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--light-blue); vertical-align: middle; white-space: nowrap; }
+        .users-table th { color: var(--text-gray); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .users-table tr:hover { background: var(--light-blue); }
+        
+        /* COLUMN WIDTHS FOR PERFECT ALIGNMENT */
+        .users-table th:nth-child(1), .users-table td:nth-child(1) { width: 15%; }
+        .users-table th:nth-child(2), .users-table td:nth-child(2) { width: 25%; }
+        .users-table th:nth-child(3), .users-table td:nth-child(3) { width: 10%; }
+        .users-table th:nth-child(4), .users-table td:nth-child(4) { width: 12%; }
+        .users-table th:nth-child(5), .users-table td:nth-child(5) { width: 13%; }
+        .users-table th:nth-child(6), .users-table td:nth-child(6) { width: 25%; text-align: right; }
+
+        /* BADGES WITH ICONS */
+        .badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+        .badge .material-icons { font-size: 16px; }
+        .badge.active { background: #DCFCE7; color: #166534; }
+        .badge.banned { background: #FEE2E2; color: #B91C1C; }
+        .badge.premium { background: #DBEAFE; color: #1E40AF; }
+        body.dark-mode .badge.active { background: #14532D; color: #4ADE80; }
+        body.dark-mode .badge.banned { background: #7F1D1D; color: #FCA5A5; }
+        body.dark-mode .badge.premium { background: #1E3A8A; color: #93C5FD; }
+
+        /* ACTION BUTTONS WITH REAL ICONS */
+        .action-group { display: flex; gap: 8px; justify-content: flex-end; }
+        .action-btn { width: 36px; height: 36px; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .action-btn .material-icons { font-size: 20px; }
+        .action-btn:hover { transform: translateY(-2px); }
+        .btn-upgrade { background: var(--primary-blue); color: white; }
+        .btn-ban { background: var(--red); color: white; }
+        .btn-delete { background: var(--text-gray); color: white; }
+
+        /* TOOLTIP */
+        .action-btn { position: relative; }
+        .action-btn::after { content: attr(data-tooltip); position: absolute; bottom: -35px; left: 50%; transform: translateX(-50%); background: var(--text-dark); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none; transition: 0.2s; }
+        .action-btn:hover::after { opacity: 1; }
+
+        .overlay { display: none; position: fixed; top: 65px; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 998; }
+        .overlay.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-left">
+            <button class="hamburger" id="hamburger-btn"><span class="material-icons">menu</span></button>
+            <img src=" /images/logo.jpeg" alt="BOG Cloud Logo" class="logo"> 
+            <h1>BOG Cloud</h1>
+        </div>
+        <div class="nav-right">
+            <button class="theme-toggle" id="theme-toggle"><span class="material-icons" id="theme-icon">dark_mode</span></button>
+            <div class="user-avatar">A</div>
+        </div>
+    </header>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <ul id="sidebar-menu"></ul>
+        </aside>
+
+        <main class="main-content">
+            <h2>Manage Users</h2>
+            <p>View, search and manage all platform users</p>
+
+            <!-- TOOLBAR -->
+            <div class="toolbar">
+                <div class="search-wrapper">
+                    <span class="material-icons">search</span>
+                    <input type="text" class="search-box" placeholder="Search by name or email...">
+                </div>
+                <button class="filter-btn"><span class="material-icons">filter_list</span> Filter</button>
+            </div>
+
+            <!-- USERS TABLE -->
+            <div class="card">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Plan</th>
+                            <th>Storage</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-tbody">
+                        <tr>
+                            <td>hannaho21</td>
+                            <td>hannah@email.com</td>
+                            <td>2 TB</td>
+                            <td>1.2 TB</td>
+                            <td><span class="badge premium"><span class="material-icons">workspace_premium</span>Premium</span></td>
+                            <td>
+                                <div class="action-group">
+                                    <button class="action-btn btn-upgrade" data-tooltip="Upgrade User"><span class="material-icons">arrow_upward</span></button>
+                                    <button class="action-btn btn-ban" data-tooltip="Ban User"><span class="material-icons">block</span></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>john.doe</td>
+                            <td>john@email.com</td>
+                            <td>200 GB</td>
+                            <td>120 GB</td>
+                            <td><span class="badge active"><span class="material-icons">check_circle</span>Active</span></td>
+                            <td>
+                                <div class="action-group">
+                                    <button class="action-btn btn-upgrade" data-tooltip="Upgrade User"><span class="material-icons">arrow_upward</span></button>
+                                    <button class="action-btn btn-ban" data-tooltip="Ban User"><span class="material-icons">block</span></button>
+                                    <button class="action-btn btn-delete" data-tooltip="Delete User"><span class="material-icons">delete</span></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>sarah_k</td>
+                            <td>sarah@email.com</td>
+                            <td>100 GB</td>
+                            <td>95 GB</td>
+                            <td><span class="badge banned"><span class="material-icons">block</span>Banned</span></td>
+                            <td>
+                                <div class="action-group">
+                                    <button class="action-btn btn-upgrade" data-tooltip="Unban User"><span class="material-icons">check_circle</span></button>
+                                    <button class="action-btn btn-delete" data-tooltip="Delete User"><span class="material-icons">delete</span></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        const isAdmin = true; 
+
+        function loadSidebar() {
+            const sidebarMenu = document.getElementById('sidebar-menu');
+            let menuHTML = `
+                <li><a href="analytics.html"><span class="material-icons">analytics</span> Analytics</a></li>
+                <li><a href="billing.html"><span class="material-icons">receipt_long</span> Billing</a></li>
+                <li><a href="manage-users.html" class="active"><span class="material-icons">group</span> Manage Users</a></li>
+                <li><a href="storage-analysis.html"><span class="material-icons">storage</span> Storage Analysis</a></li>
+                <li><a href="users.html"><span class="material-icons">person</span> Users</a></li>
+            `;
+            if (isAdmin === true) {
+                menuHTML += `<li class="admin-menu"><a href="admin-dashboard.html"><span class="material-icons">admin_panel_settings</span> ADMIN PANEL</a></li>`;
+            }
+            sidebarMenu.innerHTML = menuHTML;
+        }
+
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        document.getElementById('hamburger-btn').addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // THEME TOGGLE
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const body = document.body;
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeIcon.textContent = 'light_mode';
+        }
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.textContent = 'light_mode';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.textContent = 'dark_mode';
+            }
+        });
+
+        // BASIC SEARCH
+        document.querySelector('.search-box').addEventListener('keyup', function() {
+            let filter = this.value.toLowerCase();
+            let rows = document.querySelectorAll('#users-tbody tr');
+            rows.forEach(row => {
+                let text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', loadSidebar);
+    </script>
+</body>
+</html>
