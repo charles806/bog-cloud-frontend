@@ -1,0 +1,26 @@
+:root{ --google-blue: #1A73E8; --white: #FFFFFF; --gray-900: #202124; --gray-700: #5F6368; --gray-100: #F1F3F4; --border: #DADCE0; --red: #D93025;}
+  *{margin:0;padding:0;box-sizing:border-box;font-family: 'Roboto', Arial, sans-serif;}
+  body{background:var(--gray-100);color:var(--gray-900);padding:24px;}
+  .vault-container{max-width:900px;margin:0 auto;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;}
+  .vault-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+  .vault-header h1{font-size:24px;font-weight:500;}
+  .btn{border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:8px;}
+  .btn-primary{background:var(--google-blue);color:var(--white);}
+  .btn-primary:hover{background:#1765CC;}
+  .btn-icon{background:transparent;border:1px solid var(--border);padding:8px;border-radius:8px;cursor:pointer;display:grid;place-items:center;}
+  .btn-icon:hover{background:var(--gray-100);}
+  .btn-icon svg{width:20px;height:20px;fill:var(--gray-700);}
+  .btn-icon.delete:hover svg{fill:var(--red);}
+  .vault-card{border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+  .vault-info .site{font-weight:500;font-size:16px;}
+  .vault-info .email{font-size:13px;color:var(--gray-700);}
+  .vault-actions{display:flex;gap:8px;}
+  .password-field{display:flex;align-items:center;gap:8px;}
+  .password-field input{border:none;background:transparent;font-size:14px;width:120px;}
+  .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:1000;}
+  .modal.open{display:flex;}
+  .modal-content{background:var(--white);padding:24px;border-radius:12px;width:90%;max-width:400px;}
+  .modal-content h2{margin-bottom:16px;font-size:18px;}
+  .modal-content input{width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;margin-bottom:12px;font-size:14px;}
+  .modal-actions{display:flex;gap:12px;justify-content:flex-end;}
+  .btn-secondary{background:var(--gray-100);color:var(--gray-900);}

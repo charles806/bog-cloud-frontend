@@ -4,27 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Two-Factor Authentication - BOG Cloud</title>
-<style>
-  :root{
-    --bog-blue: #1A73E8; --bog-blue-hover: #1765CC; --white: #FFFFFF;
-    --gray-800: #202124; --gray-600: #5F6368; --gray-100: #F1F3F4; --error: #D93025; --success: #188038;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;font-family: Roboto, Arial, sans-serif;}
-  body{background:var(--gray-100);display:grid;place-items:center;min-height:100vh;padding:24px;}
-  .card{background:var(--white);padding:32px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.1);width:100%;max-width:400px;border:1px solid #E8EAED;text-align:center;}
-  .logo-b{width:40px;height:40px;background:var(--bog-blue);color:var(--white);border-radius:10px;display:grid;place-items:center;font-weight:700;font-size:20px;margin:0 auto 16px;}
-  h2{font-size:24px;font-weight:400;color:var(--gray-800);margin-bottom:12px;}
-  p{color:var(--gray-600);font-size:14px;line-height:1.6;margin-bottom:24px;}
-  .input-group{margin-bottom:16px;text-align:left;}
-  input{width:100%;padding:12px;border:1px solid #DADCE0;border-radius:8px;font-size:18px;text-align:center;letter-spacing:8px;font-weight:500;}
-  input:focus{outline:1px solid var(--bog-blue);border-color:var(--bog-blue);}
-  .btn-brand{width:100%;padding:12px;border:none;border-radius:24px;background:var(--bog-blue);color:var(--white);font-size:14px;font-weight:500;cursor:pointer;margin-top:8px;}
-  .btn-brand:hover{background:var(--bog-blue-hover);}
-  .btn-outline{width:100%;padding:12px;border:1px solid #DADCE0;border-radius:24px;background:var(--white);color:var(--gray-800);font-size:14px;font-weight:500;cursor:pointer;margin-top:8px;}
-  .link{color:var(--bog-blue);text-decoration:none;font-size:14px;}
-  .footer-link{margin-top:16px;font-size:14px;color:var(--gray-600);display:flex;justify-content:space-between;}
-  .error-msg{font-size:13px;margin-top:12px;text-align:center;display:none;}
-</style>
+<link rel="stylesheet" href="css/mfa.css">
 </head>
 <body>
   <div class="card">
@@ -46,65 +26,6 @@
     </div>
   </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD7Ve_lk5waFwPNcQwHxM9DpYFkeEsQa74",
-  authDomain: "bog-cloud.firebaseapp.com",
-  projectId: "bog-cloud",
-  storageBucket: "bog-cloud.firebasestorage.app",
-  messagingSenderId: "219071508992",
-  appId: "1:219071508992:web:42516a44ed5d2f6a59dee5",
-  measurementId: "G-GBSSD1DLQC"
-};
-const app = initializeApp(firebaseConfig); 
-const auth = getAuth(app);
-
-const errorDiv = document.getElementById('error');
-let currentUser = null;
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    currentUser = user;
-    document.getElementById('userEmail').textContent = user.email;
-  } else {
-    showMessage('Session expired. Please login again.', true);
-    setTimeout(() => { window.location.href = 'login.html'; }, 1500);
-  }
-});
-
-function showMessage(msg, isError = true) {
-  errorDiv.textContent = msg;
-  errorDiv.style.color = isError ? 'var(--error)' : 'var(--success)';
-  errorDiv.style.display = 'block';
-}
-
-// DEV MODE: Accepts any 6 digits
-window.verifyMFA = () => {
-  const code = document.getElementById('otpCode').value.trim();
-  errorDiv.style.display = 'none';
-  
-  if(!code || code.length !== 6) {
-    showMessage('Please enter a 6-digit code', true);
-    return;
-  }
-  if(!/^\d{6}$/.test(code)){
-    showMessage('Code must be 6 numbers only', true);
-    return;
-  }
-  
-  // TODO: Replace this with API call to your backend to verify real OTP
-  showMessage('MFA Verified! Redirecting...', false);
-  setTimeout(() => { window.location.href = '/dashboard/dashboard.html'; }, 1000); 
-}
-
-window.resendCode = async () => {
-  errorDiv.style.display = 'none';
-  // TODO: Call your backend/Cloud Function to send new OTP to currentUser.email
-  showMessage('New code sent to your email!', false);
-}
-</script>
+<script type="module" src="javascript/mfa-1.js"></script>
 </body>
 </html>

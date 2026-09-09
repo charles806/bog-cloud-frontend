@@ -4,25 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Verify Email - BOG Cloud</title>
-<style>
-  :root{
-    --bog-blue: #1A73E8; --bog-blue-hover: #1765CC; --white: #FFFFFF;
-    --gray-800: #202124; --gray-600: #5F6368; --gray-100: #F1F3F4; --error: #D93025; --success: #188038;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;font-family: Roboto, Arial, sans-serif;}
-  body{background:var(--gray-100);display:grid;place-items:center;min-height:100vh;padding:24px;}
-  .card{background:var(--white);padding:32px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.1);width:100%;max-width:400px;border:1px solid #E8EAED;text-align:center;}
-  .logo-b{width:40px;height:40px;background:var(--bog-blue);color:var(--white);border-radius:10px;display:grid;place-items:center;font-weight:700;font-size:20px;margin:0 auto 16px;}
-  h2{font-size:24px;font-weight:400;color:var(--gray-800);margin-bottom:12px;}
-  p{color:var(--gray-600);font-size:14px;line-height:1.6;margin-bottom:24px;}
-  .btn-brand{width:100%;padding:12px;border:none;border-radius:24px;background:var(--bog-blue);color:var(--white);font-size:14px;font-weight:500;cursor:pointer;margin-top:8px;}
-  .btn-brand:hover{background:var(--bog-blue-hover);}
-  .btn-outline{width:100%;padding:12px;border:none;background:transparent;color:var(--bog-blue);font-size:14px;font-weight:500;cursor:pointer;margin-top:4px;}
-  .btn-outline:hover{text-decoration:underline;}
-  .link{color:var(--bog-blue);text-decoration:none;font-size:14px;}
-  .footer-link{margin-top:16px;font-size:14px;color:var(--gray-600);}
-  .error-msg{font-size:13px;margin-top:12px;text-align:center;display:none;}
-</style>
+<link rel="stylesheet" href="css/verify-otp.css">
 </head>
 <body>
   <div class="card">
@@ -39,78 +21,6 @@
     <div id="error" class="error-msg"></div>
   </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth, sendEmailVerification, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD7Ve_lk5waFwPNcQwHxM9DpYFkeEsQa74",
-  authDomain: "bog-cloud.firebaseapp.com",
-  projectId: "bog-cloud",
-  storageBucket: "bog-cloud.firebasestorage.app",
-  messagingSenderId: "219071508992",
-  appId: "1:219071508992:web:42516a44ed5d2f6a59dee5",
-  measurementId: "G-GBSSD1DLQC"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-const errorDiv = document.getElementById('error');
-let currentUser = null;
-
-// FIX 1: AUTH GUARD - This stops the loop
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    currentUser = user;
-    document.getElementById('userEmail').textContent = user.email;
-    
-    // If already verified, auto redirect to DASHBOARD
-    if(user.emailVerified){
-      showMessage('Email verified! Redirecting...', false);
-      setTimeout(() => { window.location.href = '/dashboard/dashboard.html'; }, 1000);
-    }
-  } else {
-    // No user = kick to signup
-    showMessage('Session expired. Please sign up again.', true);
-    setTimeout(() => { window.location.href = 'signup.html'; }, 1500);
-  }
-});
-
-function showMessage(msg, isError = true) {
-  errorDiv.textContent = msg;
-  errorDiv.style.color = isError ? 'var(--error)' : 'var(--success)';
-  errorDiv.style.display = 'block';
-}
-
-window.checkVerification = async () => {
-  errorDiv.style.display = 'none';
-  if(!currentUser){ showMessage('Loading user... please wait', true); return; }
-
-  try {
-    await currentUser.reload(); // IMPORTANT: refresh from Firebase server
-    if(currentUser.emailVerified){
-      showMessage('Email verified successfully!', false);
-      setTimeout(() => { window.location.href = '/dashboard/dashboard.html'; }, 1200);
-    } else {
-      showMessage('Email not verified yet. Please check your inbox and click the link.', true);
-    }
-  } catch(e) { showMessage('Something went wrong. Try again.', true); }
-}
-
-window.resendEmail = async () => {
-  errorDiv.style.display = 'none';
-  if(!currentUser){ showMessage('No user found.', true); return; }
-  try {
-    await sendEmailVerification(currentUser);
-    showMessage('Verification email resent! Check inbox + spam.', false);
-  } catch(e) { showMessage('Too many requests. Wait 1 minute.', true); }
-}
-
-// FIX 2: Wrong email must signOut first
-window.goToSignup = async () => {
-  await signOut(auth);
-  window.location.href = 'signup.html';
-}
-</script>
+<script type="module" src="javascript/verify-otp-1.js"></script>
 </body>
 </html>

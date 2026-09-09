@@ -1,0 +1,3 @@
+window.toggleSidebar = () => {document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open');}
+document.getElementById('themeToggle').onclick = () => { document.documentElement.classList.toggle('dark'); localStorage.setItem('bog-theme', document.documentElement.classList.contains('dark')? 'dark' : 'light'); document.getElementById('themeToggle').textContent = document.documentElement.classList.contains('dark')? 'Light' : 'Dark'; }
+document.getElementById('themeToggle').textContent = document.documentElement.classList.contains('dark')? 'Light' : 'Dark';

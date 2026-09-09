@@ -4,27 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sign Up - BOG Cloud</title>
-<style>
-  :root{ --bog-blue: #1A73E8; --bog-blue-hover: #1765CC; --white: #FFFFFF; --gray-800: #202124; --gray-600: #5F6368; --gray-100: #F1F3F4; --error: #D93025; --success: #188038; }
-  *{margin:0;padding:0;box-sizing:border-box;font-family: Roboto, Arial, sans-serif;}
-  body{background:var(--gray-100);display:grid;place-items:center;min-height:100vh;padding:24px;}
-.card{background:var(--white);padding:32px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.1);width:100%;max-width:400px;border:1px solid #E8EAED;text-align:center;}
-.hero-logo-img{width:160px;height:auto;object-fit:contain;display:block;margin:0 auto 24px;transition:0.2s;}
-.hero-logo-img:hover{opacity:0.8;}
-  h2{font-size:24px;font-weight:400;color:var(--gray-800);margin-bottom:24px;}
-.input-group{margin-bottom:16px;text-align:left;}
-.name-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  input{width:100%;padding:12px;border:1px solid #DADCE0;border-radius:8px;font-size:14px;}
-  input:focus{outline:1px solid var(--bog-blue);border-color:var(--bog-blue);}
-.hint{font-size:12px;color:var(--gray-600);margin-top:4px;}
-.btn-brand{width:100%;padding:12px;border:none;border-radius:24px;background:var(--bog-blue);color:var(--white);font-size:14px;font-weight:500;cursor:pointer;margin-top:8px;}
-.btn-brand:hover{background:var(--bog-blue-hover);}
-.btn-brand:disabled{opacity:0.6;cursor:not-allowed;}
-.link{color:var(--bog-blue);text-decoration:none;font-size:14px;}
-.footer-link{margin-top:16px;font-size:14px;color:var(--gray-600);}
-.error-msg{color:var(--error);font-size:13px;margin-top:12px;text-align:center;display:none;white-space:pre-line;}
-.success-msg{color:var(--success);font-size:13px;margin-top:12px;text-align:center;display:none;}
-</style>
+<link rel="stylesheet" href="css/signup.css">
 </head>
 <body>
   <div class="card">
@@ -49,80 +29,6 @@
     <div class="footer-link">Already have an account? <a href="login.html" class="link">Login</a></div>
   </div>
 
-<script>
-// DIRECT CONNECTION - NO PROXY
-const API_BASE = 'https://bog-cloud-1.onrender.com';
-
-const form = document.getElementById('signupForm');
-const errorDiv = document.getElementById('error');
-const successDiv = document.getElementById('success');
-const signupBtn = document.getElementById('signupBtn');
-
-form.onsubmit = async (e) => {
-  e.preventDefault();
-
-  const firstName = document.getElementById('firstName').value.trim();
-  const lastName = document.getElementById('lastName').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-
-  errorDiv.style.display = 'none';
-  successDiv.style.display = 'none';
-
-  if(!firstName ||!lastName ||!email ||!password) {
-    showError('Please fill all fields');
-    return;
-  }
-
-  const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  if(!strongPassword.test(password)) {
-    showError('Password must be at least 8 characters and include:\n1 uppercase, 1 lowercase, 1 number, 1 special character');
-    return;
-  }
-
-  signupBtn.disabled = true;
-  signupBtn.textContent = 'Creating account...';
-
-  try {
-    const res = await fetch(API_BASE + '/api/v1/auth/register', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        email,
-        password,
-        firstName,
-        lastName,
-        accountType: "trial"
-      })
-    });
-
-    const data = await res.json().catch(() => ({}));
-    console.log("Backend Response:", res.status, data);
-
-    if(res.ok){
-      showSuccess('Account created successfully! Redirecting to login...');
-      setTimeout(() => { window.location.href = 'login.html'; }, 2000);
-    } else {
-      const errorMessage = data.message || data.title || data.errors?.[0]?.description || 'Signup failed';
-      showError(errorMessage);
-    }
-  } catch(err){
-    showError('Cannot connect to server. CORS error? Backend needs to allow https://bog-cloud.vercel.app');
-    console.error('Signup Error:', err);
-  } finally {
-    signupBtn.disabled = false;
-    signupBtn.textContent = 'Sign up';
-  }
-}
-
-function showError(message){
-  errorDiv.textContent = message;
-  errorDiv.style.display = 'block';
-}
-function showSuccess(message){
-  successDiv.textContent = message;
-  successDiv.style.display = 'block';
-}
-</script>
+<script src="javascript/signup-1.js"></script>
 </body>
 </html>

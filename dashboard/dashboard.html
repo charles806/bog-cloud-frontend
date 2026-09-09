@@ -5,94 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BOG Cloud - Drive</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-<script>
-// Apply theme ASAP to prevent white flash
-(function(){
-  const saved = localStorage.getItem('bog-theme');
-  if(saved === 'dark') document.documentElement.classList.add('dark');
-})();
-</script>
-<style>
-  :root{
-    --google-blue: #1A73E8;
-    --white: #FFFFFF;
-    --gray-900: #202124;
-    --gray-700: #5F6368;
-    --gray-100: #F1F3F4;
-    --sidebar-bg: #FFFFFF;
-    --border: #DADCE0;
-    --card-bg: #FFFFFF;
-    --hover-bg: #F1F3F4;
-  }
-  :root.dark{
-    --white: #1F1F1F;
-    --gray-900: #E8EAED;
-    --gray-700: #9AA0A6;
-    --gray-100: #202124;
-    --sidebar-bg: #292A2D;
-    --border: #5F6368;
-    --card-bg: #292A2D;
-    --hover-bg: #3C4043;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;font-family: 'Roboto', Arial, sans-serif;}
-  body{background:var(--gray-100);color:var(--gray-900);transition:background 0.3s,color 0.3s;}
-.topbar{height:64px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 16px;position:sticky;top:0;z-index:100;}
-.topbar-left{display:flex;align-items:center;gap:16px;}
-.hamburger{background:none;border:none;font-size:24px;cursor:pointer;color:var(--gray-700);padding:8px;display:block;}
-.logo{display:flex;align-items:center;text-decoration:none;}
-.logo-img{width:80px;height:80px;object-fit:cover;object-position:center;background:transparent;flex-shrink:0;} /* CHANGED: bigger + zoom */
-.search-bar{flex:1;max-width:720px;margin:0 24px;background:var(--gray-100);border-radius:8px;display:flex;align-items:center;padding:0 16px;height:46px;}
-.search-bar input{border:none;background:transparent;outline:none;width:100%;font-size:14px;color:var(--gray-900);}
-.topbar-right{display:flex;align-items:center;gap:12px;position:relative;}
-.icon-btn{background:none;border:none;font-size:14px;font-weight:500;cursor:pointer;color:var(--gray-700);padding:8px 12px;border-radius:8px;border:1px solid var(--border);}
-.icon-btn:hover{background:var(--hover-bg);}
-.avatar{width:32px;height:32px;border-radius:50%;background:var(--google-blue);color:var(--white);display:grid;place-items:center;font-weight:500;font-size:14px;cursor:pointer;}
-.account-menu{display:none;position:absolute;right:0;top:48px;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;box-shadow:0 2px 10px rgba(60,64,67,.3);padding:16px;width:320px;z-index:200;}
-.account-menu.open{display:block;}
-.account-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
-.account-avatar{width:40px;height:40px;border-radius:50%;background:var(--google-blue);color:var(--white);display:grid;place-items:center;font-weight:500;font-size:18px;}
-.account-menu a{display:block;padding:10px 0;text-decoration:none;color:var(--gray-900);font-size:14px;}
-.account-menu a:hover{color:var(--google-blue);}
-.container{display:flex;}
-.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:90;}
-.overlay.open{display:block;}
-.sidebar{width:280px;background:var(--sidebar-bg);padding:16px 8px;height:calc(100vh - 64px);position:fixed;top:64px;left:0;overflow-y:auto;z-index:95;transition:transform 0.3s,background 0.3s;transform:translateX(-100%);display:flex;flex-direction:column;}
-.sidebar.open{transform:translateX(0);}
-.new-btn{background:var(--card-bg);border:1px solid var(--border);border-radius:24px;padding:12px 24px;display:flex;align-items:center;gap:12px;font-size:14px;font-weight:500;box-shadow:0 1px 2px rgba(60,64,67,.3);cursor:pointer;margin-bottom:16px;width:100%;color:var(--gray-900);}
-.new-btn:hover{background:var(--hover-bg);}
-.nav-title{font-size:11px;font-weight:600;color:var(--gray-700);text-transform:uppercase;letter-spacing:0.5px;margin:16px 0 8px 16px;}
-.nav-link{display:flex;align-items:center;gap:16px;padding:12px 16px;border-radius:0 24px 24px 0;color:var(--gray-700);text-decoration:none;font-size:14px;font-weight:500;}
-.nav-link:hover{background:var(--hover-bg);}
-.nav-link.active{background:#E8F0FE;color:var(--google-blue);font-weight:500;}
-.nav-ico{width:24px;height:24px;display:grid;place-items:center;}
-.nav-ico svg{width:24px;height:24px;fill:currentColor;}
-.divider{height:1px;background:var(--border);margin:16px 0;}
-.sidebar-footer{margin-top:auto;padding:16px 8px;}
-.sidebar-footer.icon-btn{width:100%;}
-.main{flex:1;padding:24px 32px;margin-left:0;transition:margin-left 0.3s;}
-.main.shifted{margin-left:280px;}
-.section-title{font-size:16px;font-weight:500;color:var(--gray-700);margin-bottom:16px;}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-bottom:32px;}
-.card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:0 1px 2px rgba(60,64,67,.1);transition:background 0.3s;}
-.card:hover{box-shadow:0 1px 3px rgba(60,64,67,.2);}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.card-title{font-size:14px;font-weight:500;color:var(--gray-700);}
-.card-value{font-size:28px;font-weight:400;color:var(--google-blue);margin-bottom:4px;}
-.card-label{font-size:12px;color:var(--gray-700);}
-.files-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;}
-.table-wrap{overflow-x:auto;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;}
-.files-table{width:100%;min-width:500px;border-collapse:collapse;}
-.files-table th{padding:12px 16px;text-align:left;font-size:12px;font-weight:500;color:var(--gray-700);border-bottom:1px solid var(--border);background:var(--gray-100);}
-.files-table td{padding:12px 16px;font-size:14px;border-bottom:1px solid var(--gray-100);color:var(--gray-900);}
-.file-name{display:flex;align-items:center;gap:12px;color:var(--gray-900);text-decoration:none;}
-.file-name:hover{color:var(--google-blue);}
-.btn-delete{background:#D93025;color:var(--white);border:none;padding:8px 16px;border-radius:4px;font-size:12px;cursor:pointer;}
-.progress{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:8px;}
-.progress-bar{height:100%;background:var(--google-blue);width:0%;transition:width 0.2s;}
-  @media(max-width:1200px){.grid-4{grid-template-columns:repeat(2,1fr);}}
-  @media(max-width:1024px){.search-bar{display:none;}.main{padding:16px;}.main.shifted{margin-left:0;}}
-  @media(max-width:768px){.grid-4{grid-template-columns:1fr;}.card-value{font-size:24px;}.topbar{padding:0 12px;}.logo-img{width:64px;height:64px;} /* CHANGED: bigger mobile */.nav-link{padding:14px 16px;font-size:16px;}.sidebar{padding-top:16px;}}
-</style>
+<script src="javascript/dashboard-1.js"></script>
+<link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
   <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
@@ -101,18 +15,18 @@
     <div class="topbar-left">
       <button class="hamburger" onclick="toggleSidebar()">☰</button>
       <a href="dashboard.html" class="logo">
-        <img src=" /images/logo.jpeg" alt="BOG Cloud Logo" class="logo-img" onerror="this.style.display='none';">
+        <img src="/images/logo.jpeg" alt="BOG Cloud Logo" class="logo-img" onerror="this.style.display='none';">
       </a>
     </div>
     <div class="search-bar"><input type="text" id="searchInput" placeholder="Search in BOG Cloud"></div>
     <div class="topbar-right">
       <button class="icon-btn" id="themeToggle" title="Toggle Theme">Dark</button>
-      <span id="userFirstName" style="font-size:14px;font-weight:500;"></span>
-      <div class="avatar" id="userAvatar" onclick="toggleAccountMenu()">B</div>
+      <span id="userFirstName" style="font-size:14px;font-weight:500;">Loading...</span>
+      <div class="avatar" id="userAvatar" onclick="toggleAccountMenu()">?</div>
       <div class="account-menu" id="accountMenu">
         <div class="account-header">
-          <div class="account-avatar" id="menuAvatar">B</div>
-          <div><div id="menuUserName" style="font-weight:500;">User</div><div id="menuUserEmail" style="font-size:12px; color:var(--gray-700);">user@email.com</div></div>
+          <div class="account-avatar" id="menuAvatar">?</div>
+          <div><div id="menuUserName" style="font-weight:500;">Loading</div><div id="menuUserEmail" style="font-size:12px; color:var(--gray-700);">loading@email.com</div></div>
         </div>
         <div class="divider" style="margin:8px 0;"></div>
         <a href="/account/profile.html">Manage your BOG Account</a>
@@ -167,165 +81,6 @@
     </div>
   </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD7Ve_lk5waFwPNcQwHxM9DpYFkeEsQa74",
-  authDomain: "bog-cloud.firebaseapp.com",
-  projectId: "bog-cloud",
-  storageBucket: "bog-cloud.appspot.com",
-  messagingSenderId: "219071508992",
-  appId: "1:219071508992:web:42516a44ed5d2f6a59dee5"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
-let currentUser = null;
-let authChecked = false;
-
-// Dark Mode - Text Only
-function updateThemeButton(){
-  const isDark = document.documentElement.classList.contains('dark');
-  document.getElementById('themeToggle').textContent = isDark? 'Light' : 'Dark';
-  document.getElementById('themeToggleSidebar').textContent = isDark? 'Light Mode' : 'Dark Mode';
-}
-function toggleTheme(){
-  document.documentElement.classList.toggle('dark');
-  localStorage.setItem('bog-theme', document.documentElement.classList.contains('dark')? 'dark' : 'light');
-  updateThemeButton();
-}
-document.getElementById('themeToggle').onclick = toggleTheme;
-document.getElementById('themeToggleSidebar').onclick = toggleTheme;
-updateThemeButton();
-
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('overlay').classList.toggle('open');
-  if(window.innerWidth > 1024){
-    document.getElementById('main').classList.toggle('shifted');
-  }
-}
-window.toggleSidebar = toggleSidebar;
-
-function toggleAccountMenu() {
-  document.getElementById('accountMenu').classList.toggle('open');
-}
-window.toggleAccountMenu = toggleAccountMenu;
-
-document.addEventListener('click', (e) => {
-  const menu = document.getElementById('accountMenu');
-  const avatar = document.getElementById('userAvatar');
-  if(!menu.contains(e.target) &&!avatar.contains(e.target)){
-    menu.classList.remove('open');
-  }
-})
-
-// AUTH LOADING GUARD - Fixes redirect issue
-onAuthStateChanged(auth, (user) => {
-  console.log("Auth state:", user);
-  if(!authChecked){
-    authChecked = true;
-    if(!user){
-      console.log("No user, redirecting to login");
-      window.location.href = '/auth/login.html';
-      return;
-    }
-    if(!user.emailVerified){
-      console.log("Email not verified");
-      window.location.href = '/auth/verify-otp.html';
-      return;
-    }
-    currentUser = user;
-    const firstName = user.displayName? user.displayName.split(' ')[0] : user.email.split('@')[0];
-    const initial = firstName[0].toUpperCase();
-    document.getElementById('userFirstName').textContent = firstName;
-    document.getElementById('userName').textContent = firstName;
-    document.getElementById('userAvatar').textContent = initial;
-    document.getElementById('menuAvatar').textContent = initial;
-    document.getElementById('menuUserName').textContent = user.displayName || firstName;
-    document.getElementById('menuUserEmail').textContent = user.email;
-    loadDashboardData();
-  }
-});
-
-window.logout = async () => { await signOut(auth); window.location.href = '/index.html'; }
-
-document.getElementById('uploadBtn').onclick = () => document.getElementById('fileInput').click();
-document.getElementById('fileInput').addEventListener('change', async (e) => {
-  const files = e.target.files;
-  if(!currentUser || files.length === 0) return;
-  document.getElementById('progressWrap').style.display = 'block';
-  for(let i = 0; i < files.length; i++){
-    const file = files[i];
-    const path = `users/${currentUser.uid}/files/${Date.now()}_${file.name}`;
-    const uploadTask = uploadBytesResumable(ref(storage, path), file);
-    document.getElementById('progressText').textContent = `Uploading ${i+1} of ${files.length}: ${file.name}`;
-    await new Promise((resolve) => {
-      uploadTask.on('state_changed', (snapshot) => {
-        document.getElementById('progressBar').style.width = (snapshot.bytesTransferred / snapshot.totalBytes) * 100 + '%';
-      }, (error) => {console.error(error); alert("Upload failed: " + error.message)}, async () => {
-        const url = await getDownloadURL(uploadTask.snapshot.ref);
-        await addDoc(collection(db, "files"), {uid: currentUser.uid, name: file.name, path, url, size: file.size, createdAt: serverTimestamp()});
-        resolve();
-      });
-    });
-  }
-  document.getElementById('progressWrap').style.display = 'none'; // FIXED typo here too
-  document.getElementById('fileInput').value = '';
-  loadDashboardData();
-});
-
-async function loadDashboardData(){ if(!currentUser) return; loadFiles(); loadStats(); loadApiStats(); }
-
-async function loadFiles(){
-  const q = query(collection(db, "files"), where("uid", "==", currentUser.uid), orderBy("createdAt", "desc"));
-  const snapshot = await getDocs(q);
-  const tbody = document.getElementById('recentFiles');
-  tbody.innerHTML = '';
-  snapshot.docs.slice(0,10).forEach(docSnap => {
-    const data = docSnap.data();
-    const sizeMB = (data.size / 1024 / 1024).toFixed(2) + ' MB';
-    tbody.innerHTML += `<tr data-name="${data.name.toLowerCase()}">
-      <td><a href="${data.url}" target="_blank" class="file-name"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/></svg>${data.name}</a></td>
-      <td>${sizeMB}</td>
-      <td><button class="btn-delete" onclick="deleteFile('${docSnap.id}')">Delete</button></td>
-    </tr>`;
-  });
-}
-
-document.getElementById('searchInput').addEventListener('keyup', (e) => {
-  const searchTerm = e.target.value.toLowerCase();
-  document.querySelectorAll('#recentFiles tr').forEach(row => {
-    const fileName = row.getAttribute('data-name') || '';
-    row.style.display = fileName.includes(searchTerm)? '' : 'none';
-  });
-});
-
-window.deleteFile = async (id) => {
-  if(!confirm('Move to trash?')) return;
-  const fileDoc = await getDoc(doc(db, "files", id));
-  const data = fileDoc.data();
-  await addDoc(collection(db, "trash"), {...data, deletedAt: serverTimestamp()});
-  await deleteDoc(doc(db, "files", id));
-  loadDashboardData();
-}
-
-async function loadStats(){
-  const filesSnap = await getDocs(query(collection(db, "files"), where("uid", "==", currentUser.uid)));
-  let totalSize = 0; filesSnap.forEach(d => totalSize += d.data().size || 0);
-  document.getElementById('storageUsed').textContent = (totalSize / 1024 / 1024 / 1024).toFixed(2) + ' GB';
-  document.getElementById('vaultCount').textContent = (await getDocs(query(collection(db, "vault"), where("userId", "==", currentUser.uid)))).size;
-  document.getElementById('trashCount').textContent = (await getDocs(query(collection(db, "trash"), where("uid", "==", currentUser.uid)))).size;
-}
-
-async function loadApiStats(){
-  document.getElementById('apiCallsCount').textContent = '0';
-}
-</script>
+<script src="javascript/dashboard-2.js"></script>
 </body>
 </html>
