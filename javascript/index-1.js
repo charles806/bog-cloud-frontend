@@ -1,5 +1,5 @@
 // ===== BACKEND CONNECTION =====
-const API_BASE = 'https://bog-cloud-1.onrender.com';
+const API_BASE = 'https://bog-cloud-backend.vercel.app';
 
 async function bogAPI(endpoint, method='GET', body=null) {
   const token = localStorage.getItem('bog_token');
