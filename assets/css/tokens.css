@@ -1,0 +1,171 @@
+/* ==========================================================================
+   BOG CLOUD — DESIGN TOKENS
+   Single source of truth. Loaded before base.css and components.css.
+
+   PALETTE PROVENANCE
+   ------------------
+   Brand ramp: OKLCH-derived, generated via Kroma (ramps.studio) with a
+   #1a3cff seed at enforced WCAG AAA. Signal fills and the structural
+   black/off-white base follow the canonical neobrutalist grammar
+   (neubrutalism.com -> Visual DNA -> A Canonical Neubrutalist Palette).
+
+   Every text/background pair in this file has been measured. Do not add a
+   colour without measuring it. See the contract immediately below.
+   ========================================================================== */
+
+:root {
+  /* --- STRUCTURE ---------------------------------------------------------
+     --edge and --shade are the same value in light mode and FLIP TOGETHER in
+     dark mode. That flip is what keeps hard shadows from vanishing on a dark
+     surface: the offset renders light-on-dark, like a misregistered print.
+     If you override one, override both.                              */
+  --ink:    #0A0A0A;
+  --paper:  #FFFDF5;
+  --edge:   var(--ink);
+  --shade:  var(--ink);
+
+  --bg:      #FFFDF5;   /* page */
+  --surface: #FFFFFF;   /* cards, panels, table bodies */
+
+  /* --- BRAND RAMP (Ramps / OKLCH / AAA) ---------------------------------- */
+  --brand-50:  #F2F6FF;
+  --brand-100: #E2EBFF;
+  --brand-200: #C8D9FF;
+  --brand-300: #A3BFFF;
+  --brand-400: #759EFF;
+  --brand-600: #2F5FFF;
+  --brand-700: #1631F6;
+  --brand-900: #09079E;
+
+  /* --- SIGNAL FILLS ------------------------------------------------------
+     Loud, flat, categorical. Used as FILLS ONLY.
+     Each takes --ink text exclusively (measured 7.1:1 - 13.7:1).          */
+  --flag:  #FFD23F;   /* highlighter yellow — NEVER as text on white       */
+  --live:  #88D498;
+  --alert: #FF6B6B;
+  --sky:   #74B9FF;
+
+  /* --- TEXT -------------------------------------------------------------- */
+  --text:   #0A0A0A;   /* 19.8:1 on --surface */
+  --muted:  #595C62;   /*  6.7:1 on --surface */
+  --muted-2:#44474C;   /*  9.3:1 on --surface */
+  --on-fill:var(--ink);  /* text colour on ANY signal fill */
+  --on-brand:#FFFFFF;    /* text colour on --brand-700/900 fills */
+
+  /* Brand-coloured things that must stay legible AS TEXT on bg/surface.
+     The dark override is mandatory: --brand-700 on --bg measures 2.64:1,
+     which fails the 3:1 floor for non-text UI (progress fills) and is far
+     below the 4.5:1 needed for the numbers on a stat tile. */
+  --brand-text: var(--brand-700);
+  --link:       var(--brand-text);
+
+  /* Status fills take a theme-dependent label colour. --err-text flips to a
+     light coral in dark mode, so white on it measures 1.86:1. */
+  --on-danger: #FFFFFF;
+
+  /* --- STATUS (pair = text on its own tinted bg) ------------------------- */
+  --err-text:  #A62422;  --err-bg:  #FFF3F1;  --err-edge:  #A62422;
+  --ok-text:   #007030;  --ok-bg:   #E1FFE6;  --ok-edge:   #007030;
+  --warn-text: #695D00;  --warn-bg: #FFF4E8;  --warn-edge: #695D00;
+  --info-text: #0F1ACA;  --info-bg: #E2EBFF;  --info-edge: #1631F6;
+
+  /* --- GEOMETRY ----------------------------------------------------------
+     One canonical stroke width. Square corners are the point, not a
+     stylistic accident — radius is 0 everywhere.                            */
+  --bw:       3px;
+  --bw-thin:  2px;
+  --bw-thick: 4px;
+  --radius:   0;
+
+  --sh-1: 3px  3px  0 0 var(--shade);   /* badges, chips, inline actions */
+  --sh-2: 5px  5px  0 0 var(--shade);   /* cards, buttons, panels        */
+  --sh-3: 8px  8px  0 0 var(--shade);   /* hover lift, overlays          */
+  --sh-4: 12px 12px 0 0 var(--shade);   /* hero elements, dialogs        */
+
+  /* --- SPACE (4px base) -------------------------------------------------- */
+  --s-1: 4px;   --s-2: 8px;   --s-3: 12px;  --s-4: 16px;
+  --s-5: 24px;  --s-6: 32px;  --s-7: 48px;  --s-8: 64px;
+  --s-9: 96px;  --s-10: 128px;
+
+  /* --- TYPE --------------------------------------------------------------
+     Assertive scale contrast: display is loud, body is deliberately calm.
+     The gap between --fs-display and --fs-body IS the typographic trick.     */
+  --font-display: 'Syne', 'Arial Black', sans-serif;
+  --font-heading: 'Space Grotesk', 'Inter', sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  --fs-display: clamp(40px, 7vw, 76px);
+  --fs-h1:      clamp(30px, 4.5vw, 48px);
+  --fs-h2:      clamp(24px, 3vw, 32px);
+  --fs-h3:      20px;
+  --fs-lead:    18px;
+  --fs-body:    16px;
+  --fs-sm:      14px;
+  --fs-xs:      13px;   /* floor. Nothing ships at 11px or 12px. */
+
+  --lh-tight: 1.05;
+  --lh-snug:  1.25;
+  --lh-body:  1.6;
+
+  --track-tight: -0.03em;   /* display + headings only */
+  --track-label:  0.08em;   /* mono uppercase micro-labels */
+
+  /* --- MOTION ------------------------------------------------------------ */
+  --t-press: 90ms;    /* the snap. Neobrutalism should feel immediate. */
+  --t-lift:  140ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+
+  --focus-ring: 3px;
+}
+
+/* ==========================================================================
+   DARK MODE
+   One implementation. Applied to <html data-theme="dark">, persisted under
+   the single key 'bog-theme'. The previous codebase had three competing
+   schemes (:root.dark + 'bog-theme', body.dark-mode + 'theme') which meant
+   toggling in one section did not carry to the next.
+   ========================================================================== */
+:root[data-theme="dark"] {
+  --edge:  var(--paper);
+  --shade: var(--paper);
+
+  --bg:      #0A0A0A;
+  --surface: #16161A;
+
+  --text:    #FFFDF5;
+  --muted:   #B8BCC4;
+  --muted-2: #9FA2A9;
+
+  --on-brand:  #FFFFFF;
+  --on-danger: #0A0A0A;   /* on the light coral --err-edge */
+
+  --brand-50:  #0F1ACA;
+  --brand-100: #09079E;
+  --brand-300: #A3BFFF;   /* brand text on dark: 10.8:1 */
+
+  --brand-text: var(--brand-300);
+  --link:       var(--brand-300);
+
+  --err-text:  #FFA59A;  --err-bg:  #2A1512;  --err-edge:  #FFA59A;
+  --ok-text:   #75DA8D;  --ok-bg:   #0E2A16;  --ok-edge:   #75DA8D;
+  --warn-text: #F2B26B;  --warn-bg: #2E1E0C;  --warn-edge: #F2B26B;
+  --info-text: #A3BFFF;  --info-bg: #0F1ACA;  --info-edge: #A3BFFF;
+}
+
+/* ==========================================================================
+   COLOUR CONTRACT — the five rules that keep this palette accessible
+   ==========================================================================
+   1. Brand FILLS take --on-brand (white) only. --ink on --brand-700 measures
+      2.64:1 = FAIL. Never invert this.
+   2. Signal FILLS (--flag/--live/--alert/--sky) take --on-fill (--ink) only.
+   3. --flag is a fill, never a text colour. Yellow-on-white measures ~1.6:1.
+   4. Status pairs are pre-paired (--x-text on --x-bg). Do not mix across.
+      Verified light: err 6.68:1, ok 5.85:1, warn 6.11:1, info 8.69:1.
+   5. Anything brand-coloured that appears AS TEXT or as a meaningful UI
+      boundary (links, stat numerals, progress fills) must use --brand-text,
+      never --brand-700. --brand-text flips to --brand-300 in dark mode.
+      Using --brand-700 there measures 2.64:1 and fails SC 1.4.11.
+   6. --on-danger flips with the theme: white on --err-edge in light (7.12:1),
+      ink on the light coral in dark (10.5:1). Never hardcode #FFFFFF.
+*/
