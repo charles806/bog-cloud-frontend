@@ -3,32 +3,109 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign Up - BOG Cloud</title>
-<link rel="stylesheet" href="css/signup.css">
+<title>Create your account — BOG Cloud</title>
+<meta name="description" content="Start free with 100GB of Nigerian cloud storage. No card required.">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
 <body>
-  <div class="card">
-    <a href="../index.html"><img src="../images/logo.jpeg" alt="BOG Cloud Logo" class="hero-logo-img"></a>
-    <h2>Create your BOG account</h2>
+<a class="skip-link" href="#main">Skip to sign-up form</a>
 
-    <form id="signupForm">
-      <div class="input-group name-row">
-        <input id="firstName" type="text" placeholder="First Name" required>
-        <input id="lastName" type="text" placeholder="Last Name" required>
+<div class="auth">
+  <main class="auth__main" id="main">
+    <a class="auth__brand" href="/index.html">
+      <img src="/assets/images/logo.PNG" alt="" width="40" height="40" decoding="async">
+      <span>BOG Cloud</span>
+    </a>
+
+    <div>
+      <h1 class="auth__title">Create your account</h1>
+      <p class="page__sub">100GB free. No card, no trial clock.</p>
+    </div>
+
+    <div id="error" class="alert" role="alert" aria-live="assertive"></div>
+    <div id="success" class="alert" role="status" aria-live="polite"></div>
+
+    <form class="auth__form" id="signupForm" method="post">
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="firstName">First name</label>
+          <input class="field-input" id="firstName" name="firstName" type="text"
+                 autocomplete="given-name" required aria-describedby="firstName-error">
+          <p class="field-error" id="firstName-error"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="lastName">Last name</label>
+          <input class="field-input" id="lastName" name="lastName" type="text"
+                 autocomplete="family-name" required aria-describedby="lastName-error">
+          <p class="field-error" id="lastName-error"></p>
+        </div>
       </div>
-      <div class="input-group"><input id="email" type="email" placeholder="Email" required></div>
-      <div class="input-group">
-        <input id="password" type="password" placeholder="Password" required>
-        <div class="hint">Min 8 chars, 1 uppercase, 1 number, 1 special char</div>
+
+      <div class="field">
+        <label class="field-label" for="email">Email</label>
+        <input class="field-input" id="email" name="email" type="email"
+               autocomplete="email" inputmode="email" spellcheck="false"
+               required aria-describedby="email-error">
+        <p class="field-error" id="email-error"></p>
       </div>
-      <button type="submit" class="btn-brand" id="signupBtn">Sign up</button>
+
+      <div class="field">
+        <label class="field-label" for="password">Password</label>
+        <div class="reveal">
+          <input class="field-input" id="password" name="password" type="password"
+                 autocomplete="new-password" required
+                 aria-describedby="pw-hint password-error" data-meter-for="pw-meter">
+          <button type="button" class="reveal-btn" data-reveal="password"
+                  aria-label="Show password" title="Show password">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5c5 0 9 4.5 9 7s-4 7-9 7-9-4.5-9-7 4-7 9-7zm0 2c-3.6 0-6.6 3.2-6.9 5 .3 1.8 3.3 5 6.9 5s6.6-3.2 6.9-5c-.3-1.8-3.3-5-6.9-5zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg>
+          </button>
+        </div>
+
+        <div class="meter-meter" id="pw-meter">
+          <div class="meter-meter__bars">
+            <span class="meter-meter__bar"></span>
+            <span class="meter-meter__bar"></span>
+            <span class="meter-meter__bar"></span>
+            <span class="meter-meter__bar"></span>
+          </div>
+          <span class="meter-meter__label">Password strength</span>
+        </div>
+
+        <p class="field-hint" id="pw-hint">At least 8 characters, with an uppercase letter, a lowercase letter, a number and a symbol.</p>
+        <p class="field-error" id="password-error"></p>
+      </div>
+
+      <button type="submit" class="btn btn--primary btn--lg btn--block" id="signupBtn">Create account</button>
     </form>
 
-    <div id="error" class="error-msg"></div>
-    <div id="success" class="success-msg"></div>
-    <div class="footer-link">Already have an account? <a href="login.html" class="link">Login</a></div>
-  </div>
+    <p class="auth__foot">
+      Already have an account? <a href="/auth/login.html">Sign in</a>
+    </p>
+  </main>
 
+  <aside class="auth__aside">
+    <p class="auth__note">What you get on the free tier</p>
+    <h2>Real storage, not a demo.</h2>
+    <ul class="auth__list">
+      <li><strong>100GB</strong> of file storage, shared across up to 1 user.</li>
+      <li>Password vault with per-item reveal and breach watch.</li>
+      <li>REST API keys and documented endpoints from day one.</li>
+      <li>Session list and one-click revocation.</li>
+    </ul>
+    <span class="stamp">No card</span>
+  </aside>
+</div>
+
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/config.js"></script>
 <script src="javascript/signup-1.js"></script>
 </body>
 </html>

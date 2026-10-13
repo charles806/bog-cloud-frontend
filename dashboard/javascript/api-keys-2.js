@@ -1,10 +1,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-const API_BASE = "https://api.bogcloud.com/v1"; // CHANGE THIS
+/* This file is the only thing that talks to the keys API, and it authenticates
+   with a Firebase ID token rather than the Express session token — a different
+   identity system. Both addresses now live in assets/js/config.js. */
+const API_BASE = window.BOG.config.keysApi;
 let idToken = null; let keysData = [];
 
-const firebaseConfig = {apiKey: "AIzaSyD7Ve_lk5waFwPNcQwHxM9DpYFkeEsQa74",authDomain: "bog-cloud.firebaseapp.com",projectId: "bog-cloud",storageBucket: "bog-cloud.appspot.com",messagingSenderId: "219071508992",appId: "1:219071508992:web:42516a44ed5d2f6a59dee5"};
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(window.BOG.config.firebase);
 const auth = getAuth(app);
 
 window.toggleSidebar = () => {document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open');}

@@ -3,54 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>API Keys - BOG Cloud</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-<script src="javascript/api-keys-1.js"></script>
-<link rel="stylesheet" href="css/api-keys.css">
+<title>API Keys — BOG Cloud</title>
+<meta name="description" content="Use these keys to access the BOG Cloud API from your apps and scripts.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
-<body>
-  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-  <div class="topbar">
-    <div class="topbar-left">
-      <button class="hamburger" onclick="toggleSidebar()">☰</button>
-      <a href="dashboard.html" class="logo">
-        <img src=" /images/logo.jpeg" class="logo-img" onerror="this.src='https://placehold.co/40x40/4285F4/FFFFFF?text=B'">
-        <span>BOG Cloud</span>
-      </a>
-    </div>
-    <input type="text" class="search-bar" placeholder="Search in BOG Cloud">
-    <div class="topbar-right">
-      <button class="icon-btn" id="themeToggle">Dark</button>
-      <div class="avatar" id="userAvatar">U</div>
-    </div>
-  </div>
-
-  <div class="container">
-    <div class="sidebar" id="sidebar">
-      <a href="dashboard.html" class="nav-link"><svg class="nav-ico" viewBox="0 0 24 24"><path d="M10 4H4c-1.11 0-2.89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/></svg> My Drive</a>
-      <a href="vault.html" class="nav-link"><svg class="nav-ico" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg> Vault</a>
-      <a href="trash.html" class="nav-link"><svg class="nav-ico" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg> Trash</a>
-      <div class="nav-title">DEVELOPER</div>
-      <a href="api-keys.html" class="nav-link active"><svg class="nav-ico" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg> API Keys</a>
-      <a href="api-docs.html" class="nav-link"><svg class="nav-ico" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> API Docs</a>
-      <div class="nav-title">ACCOUNT</div>
-      <a href="profile.html" class="nav-link"><svg class="nav-ico" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> Profile</a>
-      <a href="billing.html" class="nav-link"><svg class="nav-ico" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg> Billing</a>
-    </div>
-
-    <div class="main" id="main">
-      <h2 style="font-weight:400;font-size:24px;margin-bottom:8px;">API Keys</h2>
-      <p style="color:var(--gray-700);margin-bottom:24px;">Use these keys to access BOG Cloud API from your apps and scripts</p>
-      <button class="btn-primary" id="genBtn" onclick="generateKey()">+ Generate New Key</button>
-
-      <div class="card" style="margin-top:24px;">
-        <h3 style="font-size:16px;margin-bottom:16px;">Your Active Keys</h3>
-        <div id="errorBox"></div>
-        <div id="keysList"><div class="spinner"></div></div>
+<body data-nav="app">
+<a class="skip-link" href="#main">Skip to main content</a>
+<div data-shell-topbar></div>
+<div class="shell">
+  <aside data-shell-sidebar></aside>
+  <main class="main" id="main" data-shell-main>
+    <div class="page__head">
+      <div>
+        <h1 class="page__title">API Keys</h1>
+        <p class="page__sub">Use these keys to access the BOG Cloud API from your apps and scripts.</p>
       </div>
     </div>
-  </div>
+    <div id="alert" class="alert is-hidden" role="status" aria-live="polite"></div>
 
+    <section class="section">
+      <div class="section__head">
+        <h2 class="section__title">Your Active Keys</h2>
+        <button class="btn btn--primary" type="button" id="genBtn">Generate New Key</button>
+      </div>
+      <div id="errorBox" class="alert is-hidden" role="status" aria-live="polite"></div>
+      <div class="skeleton is-hidden" id="keysSkeleton" aria-hidden="true"><div class="skeleton__row"></div><div class="skeleton__row"></div></div>
+      <div id="keysList" class="entry-list" role="list"></div>
+      <div class="empty-state is-hidden" id="keysEmpty">
+        <div class="empty-state__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2a6 6 0 0 0-5.7 8L2 16.3V22h5.7l1.4-1.4v-2h2v-2h2l1.6-1.6A6 6 0 1 0 14 2z"/></svg></div>
+        <h3>No API keys yet</h3>
+        <p>Generate a key to start using the BOG Cloud API.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/shell.js"></script>
 <script type="module" src="javascript/api-keys-2.js"></script>
 </body>
 </html>

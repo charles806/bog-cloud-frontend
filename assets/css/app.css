@@ -1,0 +1,855 @@
+/* ==========================================================================
+   BOG CLOUD — APPLICATION LAYER
+
+   Loaded after components.css, and only by signed-in pages (dashboard, account,
+   admin) plus auth. Marketing pages do not load this file.
+
+   WHY A SEPARATE FILE
+   ------------------
+   Neobrutalism at full strength on a marketing page is a feature. The same
+   treatment on a table of 200 users is a liability. This file is where that
+   tension gets resolved, and the resolution is a rule rather than a vibe:
+
+     Full strength on marketing   -> loud fills, --sh-3/--sh-4, hard highlights
+     Disciplined on data-dense    -> keep the 3px border, drop the shadow to
+                                     --sh-2, ban fills inside tables
+
+   The 3px border is never dropped. It is the identity of the system AND it is
+   what makes controls identifiable: --edge on --bg measures 19.4:1, where the
+   old #DADCE0 borders measured 1.37:1 and failed SC 1.4.11 outright.
+
+   Borders inside tables ARE dropped, for a legibility reason that has nothing
+   to do with taste: a vertical rule between every cell gives the eye a fence to
+   climb. Horizontal rules alone let a row be read as one line of data.
+   ========================================================================== */
+
+/* ==========================================================================
+   LAYOUT — app frame
+   ========================================================================== */
+
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-w, 264px) minmax(0, 1fr);
+  min-height: 100vh;
+  align-items: start;
+}
+
+.app__main {
+  min-width: 0;          /* without this, a wide table forces the whole grid wider */
+  padding: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+}
+
+@media (max-width: 1024px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .app__main { padding: var(--s-4); gap: var(--s-5); }
+}
+
+/* Sticky main column on wide screens so the page head stays put while a long
+   table scrolls. */
+@media (min-width: 1025px) {
+  .app__main { position: sticky; top: 0; max-height: 100vh; overflow-y: auto; }
+}
+
+/* ==========================================================================
+   PAGE HEAD
+   The old pages rendered "<h2 style='font-weight:400;font-size:24px'>" — a
+   heading one step above body size and lighter than the text around it, so the
+   eye had nothing to catch on. Page heads now own the h1 and get the display
+   face.
+   ========================================================================== */
+
+.page__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+}
+
+.page__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h1);
+  font-weight: 800;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--track-tight);
+  margin: 0;
+}
+
+.page__sub {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  margin: var(--s-2) 0 0;
+  max-width: 62ch;
+}
+
+.page__actions { display: flex; gap: var(--s-3); flex-wrap: wrap; }
+
+/* ==========================================================================
+   SECTIONS
+   ========================================================================== */
+
+.section { display: flex; flex-direction: column; gap: var(--s-4); }
+
+.section__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+}
+
+.section__title {
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  letter-spacing: var(--track-tight);
+  margin: 0;
+}
+
+.section__meta { font-size: var(--fs-xs); color: var(--muted); }
+
+.divider { border: 0; border-top: var(--bw-thin) solid var(--edge); opacity: 0.25; margin: 0; }
+
+.cluster { display: flex; gap: var(--s-3); flex-wrap: wrap; align-items: center; }
+.cluster--end { justify-content: flex-end; }
+.cluster--between { justify-content: space-between; }
+.cluster--tight { gap: var(--s-2); }
+
+/* ==========================================================================
+   TOOLBAR + FILTER BAR
+   Replaces the ad-hoc "search box floating in the topbar" pattern. On a dense
+   page, filtering belongs directly above the thing it filters.
+   ========================================================================== */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  padding: var(--s-3);
+  background: var(--surface-2);
+  border: var(--bw) solid var(--edge);
+  box-shadow: var(--sh-1);
+}
+
+.filter-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  padding: var(--s-4);
+  background: var(--surface);
+  border: var(--bw) solid var(--edge);
+  box-shadow: var(--sh-2);
+}
+
+.filter-bar .field { flex: 1 1 180px; min-width: 0; }
+.filter-bar .btn { flex-shrink: 0; }
+
+/* Result count that updates with the filter set. */
+.result-count {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   TABS
+   ========================================================================== */
+
+.tabs { display: flex; gap: 0; border-bottom: var(--bw) solid var(--edge); overflow-x: auto; }
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  background: transparent;
+  border: var(--bw) solid transparent;
+  border-bottom: 0;
+  margin-bottom: calc(var(--bw) * -1);
+  font-family: var(--font-heading);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--t-lift) var(--ease), color var(--t-lift) var(--ease);
+}
+
+.tab:hover { background: var(--surface-2); color: var(--text); }
+
+.tab[aria-selected="true"] {
+  background: var(--flag);
+  color: var(--on-fill);
+  border-color: var(--fill-edge);
+  box-shadow: var(--sh-1);
+}
+
+.tab__count {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1px 6px;
+}
+:root[data-theme="dark"] .tab__count { background: var(--paper); color: var(--ink); }
+
+/* ==========================================================================
+   DENSE TABLE — the core readability rule
+   ========================================================================== */
+
+.table--dense { font-size: var(--fs-sm); }
+
+.table--dense thead th {
+  padding: var(--s-3) var(--s-4);
+  /* Micro-label treatment: mono, uppercase, tracked. Column headers become
+     scannable labels rather than competing sentence-case text. */
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--text);
+  background: var(--surface-2);
+  white-space: nowrap;
+}
+
+.table--dense tbody td { padding: var(--s-3) var(--s-4); }
+
+/* No vertical rules. A cell-by-cell fence makes the eye climb; horizontal
+   rules alone let a row be read as one line of data. */
+.table--dense th + th,
+.table--dense td + td { border-left: 0; }
+
+.table--dense tbody tr:nth-child(even) { background: var(--row-alt); }
+.table--dense tbody tr:hover { background: var(--row-hover); }
+.table--dense tbody tr[aria-selected="true"] { background: var(--flag); color: var(--on-fill); }
+.table--dense tbody tr[aria-selected="true"] td { border-color: var(--fill-edge); }
+
+/* Row height floor. 44px is the WCAG 2.2 target-size minimum and it doubles as
+   a comfortable click target for the row-action buttons. */
+.table--dense tbody td { min-height: 44px; }
+
+/* Figures align on the decimal and never reflow as digits change. */
+.table--dense .num,
+.table .num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.table--dense td:first-child, .table--dense th:first-child { padding-left: var(--s-4); }
+
+/* Primary cell: name + supporting meta on one row. */
+.cell-main { font-weight: 600; }
+.cell-sub {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  font-weight: 400;
+}
+.table--dense tbody tr[aria-selected="true"] .cell-sub { color: var(--on-fill); }
+
+.row-actions { display: flex; gap: var(--s-2); justify-content: flex-end; }
+
+/* Horizontal scroll for tables wider than the viewport, with a visible edge so
+   it is discoverable that there is more content to the right. */
+.table-scroll {
+  overflow-x: auto;
+  border: var(--bw) solid var(--edge);
+  box-shadow: var(--sh-2);
+  background: var(--surface);
+}
+
+/* ==========================================================================
+   PAGINATION
+   ========================================================================== */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+
+.pagination__page {
+  min-width: 44px;
+  height: 44px;
+  padding: 0 var(--s-3);
+  display: inline-grid;
+  place-items: center;
+  background: var(--surface);
+  border: var(--bw) solid var(--edge);
+  box-shadow: var(--sh-1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+}
+.pagination__page:hover:not(:disabled) { background: var(--flag); color: var(--on-fill); border-color: var(--fill-edge); }
+.pagination__page[aria-current="page"] { background: var(--ink); color: var(--paper); border-color: var(--edge); }
+:root[data-theme="dark"] .pagination__page[aria-current="page"] { background: var(--paper); color: var(--ink); }
+.pagination__page:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
+.pagination__gap { padding: 0 var(--s-1); color: var(--muted); font-family: var(--font-mono); }
+
+/* ==========================================================================
+   KEY / VALUE LIST — settings panels, receipts, key metadata
+   ========================================================================== */
+
+.kv { display: grid; gap: 0; border: var(--bw) solid var(--edge); box-shadow: var(--sh-2); background: var(--surface); }
+
+.kv__row {
+  display: grid;
+  grid-template-columns: minmax(140px, 34%) 1fr;
+  gap: var(--s-4);
+  padding: var(--s-3) var(--s-4);
+  align-items: baseline;
+  min-height: 44px;
+}
+.kv__row + .kv__row { border-top: var(--bw-thin) solid var(--edge); }
+.kv__row:nth-child(even) { background: var(--row-alt); }
+
+.kv__key {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.kv__val { font-size: var(--fs-sm); min-width: 0; overflow-wrap: anywhere; }
+
+@media (max-width: 560px) {
+  .kv__row { grid-template-columns: minmax(0, 1fr); gap: var(--s-1); }
+}
+
+/* ==========================================================================
+   CODE BLOCK — API docs, API keys, curl examples
+   ========================================================================== */
+
+.code-block {
+  background: var(--ink);
+  color: var(--paper);
+  border: var(--bw) solid var(--edge);
+  box-shadow: var(--sh-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  overflow-x: auto;
+  padding: var(--s-4);
+  tab-size: 2;
+}
+:root[data-theme="dark"] .code-block { background: #000; }
+
+.code-block code { font: inherit; background: none; padding: 0; border: 0; }
+
+/* Inline code, for endpoint paths and parameter names in prose. */
+code:not(pre code) {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--surface-2);
+  border: var(--bw-thin) solid var(--edge);
+  padding: 1px 5px;
+  white-space: nowrap;
+}
+
+.code-block__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-2) var(--s-3);
+  background: var(--ink);
+  color: var(--paper);
+  border: var(--bw) solid var(--edge);
+  border-bottom: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+.code-block__bar + .code-block { border-top: 0; }
+:root[data-theme="dark"] .code-block__bar { background: #000; }
+
+.copy-btn {
+  background: var(--paper);
+  color: var(--ink);
+  border: var(--bw-thin) solid var(--edge);
+  padding: 3px var(--s-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  cursor: pointer;
+}
+.copy-btn:hover { background: var(--flag); border-color: var(--fill-edge); }
+
+/* Method chip on an endpoint signature. */
+.method {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: var(--track-label);
+  padding: 2px 8px;
+  border: var(--bw-thin) solid var(--edge);
+  text-transform: uppercase;
+}
+.method--get  { background: var(--live);  color: var(--on-fill); border-color: var(--fill-edge); }
+.method--post { background: var(--sky);   color: var(--on-fill); border-color: var(--fill-edge); }
+.method--put  { background: var(--flag);  color: var(--on-fill); border-color: var(--fill-edge); }
+.method--del  { background: var(--alert); color: var(--on-fill); border-color: var(--fill-edge); }
+
+/* ==========================================================================
+   CHECKBOX / RADIO / SWITCH
+   Labelled controls. Every form in the old codebase was placeholder-only.
+   ========================================================================== */
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: var(--s-3);
+  border: var(--bw) solid var(--edge);
+  background: var(--surface);
+  box-shadow: var(--sh-1);
+  cursor: pointer;
+  min-height: 44px;
+}
+.check:hover { background: var(--surface-2); }
+.check:has(input:checked) { background: var(--flag); color: var(--on-fill); border-color: var(--fill-edge); box-shadow: var(--sh-2); }
+.check:has(input:focus-visible) { outline: var(--focus-ring) solid var(--edge); outline-offset: 2px; }
+.check:has(input:disabled) { opacity: 0.5; cursor: not-allowed; }
+
+.check input { width: 22px; height: 22px; accent-color: var(--brand-700); flex-shrink: 0; margin: 0; cursor: inherit; }
+.check__body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.check__label { font-weight: 600; font-size: var(--fs-sm); }
+.check__hint { font-size: var(--fs-xs); color: var(--muted); }
+.check:has(input:checked) .check__hint { color: var(--on-fill); }
+
+/* ==========================================================================
+   FILE DROP — uploads
+   ========================================================================== */
+
+.file-drop {
+  display: grid;
+  place-items: center;
+  gap: var(--s-2);
+  padding: var(--s-7) var(--s-4);
+  border: var(--bw-thick) dashed var(--edge);
+  background: var(--surface);
+  text-align: center;
+  cursor: pointer;
+}
+.file-drop:hover, .file-drop.is-over { background: var(--flag); color: var(--on-fill); border-color: var(--fill-edge); }
+.file-drop__title { font-family: var(--font-heading); font-weight: 700; font-size: var(--fs-h3); }
+.file-drop__hint { font-size: var(--fs-sm); color: var(--muted); }
+.file-drop:hover .file-drop__hint,
+.file-drop.is-over .file-drop__hint { color: var(--on-fill); }
+.file-drop svg { width: 32px; height: 32px; }
+
+/* ==========================================================================
+   FILE / ENTRY ROW — drive listing, vault listing
+   ========================================================================== */
+
+.entry {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--s-4);
+  align-items: center;
+  padding: var(--s-3) var(--s-4);
+  background: var(--surface);
+  border: var(--bw) solid var(--edge);
+  min-height: 56px;
+}
+.entry + .entry { border-top: 0; }
+.entry:hover { background: var(--surface-2); }
+.entry__icon {
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  background: var(--sky);
+  border: var(--bw-thin) solid var(--fill-edge);
+  color: var(--on-fill);
+}
+.entry__icon svg { width: 18px; height: 18px; }
+.entry__body { min-width: 0; }
+.entry__name { font-weight: 600; overflow-wrap: anywhere; }
+.entry__meta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+.entry__actions { display: flex; gap: var(--s-2); }
+
+/* Vault listing uses the same row but needs a wrapper with the data-dense
+   border + shadow. The rows already carry a 3px border, so the wrapper frames
+   them rather than doubling every edge. */
+.entry-list {
+  display: grid;
+  border: var(--bw) solid var(--edge);
+  box-shadow: var(--sh-2);
+  background: var(--surface);
+}
+.entry-list:empty { display: none; }
+.entry-list .entry { box-shadow: none; }
+.entry-list .entry + .entry { border-top: var(--bw-thin) solid var(--edge); }
+
+/* Skeleton rows rendered while Firestore loads. The container .skeleton
+   already pulses; the rows give it shape so layout does not jump. */
+.skeleton__row {
+  height: 56px;
+  background: var(--surface-2);
+  border: var(--bw-thin) solid var(--edge);
+}
+.skeleton__row + .skeleton__row { margin-top: var(--s-2); }
+
+/* ==========================================================================
+   TIMELINE — session history, audit log
+   ========================================================================== */
+
+.timeline { display: grid; gap: 0; border-left: var(--bw) solid var(--edge); margin-left: var(--s-4); padding-left: 0; }
+
+.timeline__item { position: relative; padding: 0 0 var(--s-5) var(--s-5); }
+.timeline__item:last-child { padding-bottom: 0; }
+.timeline__item::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--bw) * -1 - 6px);
+  top: 5px;
+  width: 12px; height: 12px;
+  background: var(--flag);
+  border: var(--bw-thin) solid var(--fill-edge);
+}
+.timeline__title { font-weight: 600; font-size: var(--fs-sm); }
+.timeline__meta { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--muted); }
+.timeline__body { font-size: var(--fs-sm); color: var(--muted-2); margin-top: var(--s-1); }
+
+/* ==========================================================================
+   STAT TILE — dashboard tiles
+   Quieter than the marketing stat: --sh-2 not --sh-3, because four of these
+   sit side by side and a row of hard-shadowed blocks vibrates.
+   ========================================================================== */
+
+.stat-grid--dense { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+.stat--dense { box-shadow: var(--sh-2); padding: var(--s-4); }
+.stat--dense .stat__value { font-size: clamp(24px, 3vw, 32px); }
+
+.stat__delta { font-family: var(--font-mono); font-size: var(--fs-xs); font-weight: 700; }
+.stat__delta--up   { color: var(--ok-text); }
+.stat__delta--down { color: var(--err-text); }
+
+/* Horizontal bar comparison, used on analytics and storage analysis. */
+.meter-row { display: grid; gap: 4px; }
+.meter-row__head { display: flex; justify-content: space-between; gap: var(--s-3); font-size: var(--fs-sm); }
+.meter-row__val { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 700; }
+.meter { height: 20px; background: var(--surface-2); border: var(--bw-thin) solid var(--edge); overflow: hidden; }
+.meter__fill { height: 100%; background: var(--brand-700); }
+:root[data-theme="dark"] .meter__fill { background: var(--brand-300); }
+
+/* ==========================================================================
+   AUTH LAYOUT
+   The five auth pages are 0.9-1.3kB each: a logo, a heading, some inputs and
+   a button. They were given a full page of their own styling five times over.
+   This is the one layout they now share.
+   ========================================================================== */
+
+.auth {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.auth__main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--s-5);
+  padding: var(--s-7) var(--s-6);
+  max-width: 480px;
+  width: 100%;
+  margin-inline: auto;
+}
+
+.auth__aside {
+  display: none;
+  padding: var(--s-7);
+  background: var(--brand-700);
+  color: var(--on-brand);
+  border-left: var(--bw) solid var(--edge);
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--s-5);
+}
+
+@media (min-width: 900px) {
+  .auth { grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr); }
+  .auth__aside { display: flex; }
+}
+
+.auth__aside h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  letter-spacing: var(--track-tight);
+  margin: 0;
+}
+
+.auth__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h1);
+  font-weight: 800;
+  letter-spacing: var(--track-tight);
+  line-height: var(--lh-tight);
+  margin: 0;
+}
+
+.auth__form { display: flex; flex-direction: column; gap: var(--s-4); }
+
+/* Two fields side by side (given name / family name). */
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+@media (max-width: 420px) { .field-row { grid-template-columns: minmax(0, 1fr); } }
+
+/* Checkbox/terms row inside a form. */
+.form-row { display: flex; align-items: flex-start; gap: var(--s-3); font-size: var(--fs-sm); }
+.form-row input { width: 22px; height: 22px; margin: 0; flex-shrink: 0; accent-color: var(--brand-700); }
+.form-row a { color: var(--link); font-weight: 600; }
+
+.auth__foot { font-size: var(--fs-sm); color: var(--muted); }
+.auth__foot a { color: var(--link); font-weight: 600; }
+
+/* Wordmark lockup at the top of an auth panel. */
+.auth__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  text-decoration: none;
+  color: var(--text);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--fs-body);
+}
+.auth__brand img { width: 40px; height: 40px; }
+.auth__brand:hover { color: var(--link); }
+
+/* Rotated hard-bordered stamp. Loud by design — used sparingly, for a status
+   or a proof point, never for ordinary copy. */
+.stamp {
+  display: inline-block;
+  padding: var(--s-2) var(--s-4);
+  background: var(--flag);
+  color: var(--on-fill);
+  border: var(--bw) solid var(--fill-edge);
+  box-shadow: var(--sh-2);
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 800;
+  letter-spacing: var(--track-tight);
+  text-transform: uppercase;
+  transform: rotate(-2deg);
+}
+
+.auth__list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s-3); }
+.auth__list li {
+  display: flex;
+  gap: var(--s-3);
+  align-items: flex-start;
+  font-size: var(--fs-sm);
+  color: var(--on-brand);
+}
+.auth__list li::before {
+  content: "▸";
+  font-weight: 700;
+  flex-shrink: 0;
+  color: var(--flag);
+}
+.auth__note {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--on-brand);
+  opacity: 0.85;
+  margin: 0;
+}
+
+/* ==========================================================================
+   OTP INPUT — verify-otp and mfa
+   Six single-character boxes. Each is a real input so the platform keyboard,
+   paste and autofill all behave; the boxes are only a skin.
+   ========================================================================== */
+
+.otp { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+
+.otp__cell {
+  width: 56px;
+  height: 68px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  background: var(--surface);
+  border: var(--bw) solid var(--edge);
+  color: var(--text);
+  padding: 0;
+}
+.otp__cell:focus-visible { box-shadow: var(--sh-2); border-color: var(--brand-600); }
+.otp__cell[aria-invalid="true"] { border-color: var(--err-edge); background: var(--err-bg); }
+
+/* ==========================================================================
+   PASSWORD METER
+   ========================================================================== */
+
+.meter-meter { display: grid; gap: 4px; }
+.meter-meter__bars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
+.meter-meter__bar { height: 8px; background: var(--surface-2); border: var(--bw-thin) solid var(--edge); }
+/* All four steps use the *-edge variants, not the signal fills. --live measured
+   1.29:1 against the --surface-2 well and failed SC 1.4.11: it is a fill meant
+   to carry --on-fill text, not a fill to be seen against a surface. The
+   strongest step uses --edge, which flips with the theme. */
+.meter-meter__bar.is-on-weak   { background: var(--err-edge); }
+.meter-meter__bar.is-on-fair   { background: var(--warn-edge); }
+.meter-meter__bar.is-on-good   { background: var(--ok-edge); }
+.meter-meter__bar.is-on-strong { background: var(--edge); }
+.meter-meter__label { font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--muted); }
+
+/* ==========================================================================
+   DOCS LAYOUT — api-docs
+   ========================================================================== */
+
+.doc { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: var(--s-6); align-items: start; }
+@media (max-width: 900px) { .doc { grid-template-columns: minmax(0, 1fr); } }
+
+.doc__toc {
+  position: sticky;
+  top: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--s-4);
+  background: var(--surface-2);
+  border: var(--bw) solid var(--edge);
+}
+@media (max-width: 900px) { .doc__toc { position: static; } }
+
+.doc__toc a {
+  padding: var(--s-2) var(--s-3);
+  font-size: var(--fs-sm);
+  color: var(--muted-2);
+  text-decoration: none;
+  border-left: var(--bw) solid transparent;
+}
+.doc__toc a:hover { background: var(--surface); color: var(--text); }
+.doc__toc a[aria-current="true"] {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  border-left-color: var(--edge);
+}
+
+.doc__body { display: flex; flex-direction: column; gap: var(--s-6); min-width: 0; }
+
+.endpoint {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  background: var(--surface-2);
+  border: var(--bw) solid var(--edge);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+}
+.endpoint__path { font-weight: 700; overflow-wrap: anywhere; }
+
+/* ==========================================================================
+   PLAN CARD — billing
+   ========================================================================== */
+
+.plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--s-4); }
+
+.plan { display: flex; flex-direction: column; gap: var(--s-3); padding: var(--s-5); background: var(--surface); border: var(--bw) solid var(--edge); box-shadow: var(--sh-2); }
+.plan--current { box-shadow: var(--sh-3); border-width: var(--bw-thick); }
+.plan__name { font-family: var(--font-heading); font-size: var(--fs-h3); font-weight: 700; margin: 0; }
+.plan__price { font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 800; letter-spacing: var(--track-tight); }
+.plan__price small { font-family: var(--font-body); font-size: var(--fs-sm); font-weight: 400; color: var(--muted); letter-spacing: 0; }
+.plan__features { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s-2); font-size: var(--fs-sm); }
+.plan__features li { display: flex; gap: var(--s-2); align-items: flex-start; }
+.plan__features li::before { content: "✓"; font-weight: 700; color: var(--ok-text); flex-shrink: 0; }
+
+/* ==========================================================================
+   ERROR PAGE
+   ========================================================================== */
+
+.error-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: var(--s-6);
+  background: var(--bg);
+}
+
+.error-page__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+  max-width: 620px;
+  width: 100%;
+  padding: var(--s-7);
+  background: var(--surface);
+  border: var(--bw) solid var(--edge);
+  box-shadow: var(--sh-4);
+}
+
+.error-page__code {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 14vw, 128px);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: var(--track-tight);
+  color: var(--brand-text);
+  margin: 0;
+}
+
+.error-page__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  letter-spacing: var(--track-tight);
+  margin: 0;
+}
+
+.error-page__body { color: var(--muted); font-size: var(--fs-body); margin: 0; max-width: 54ch; }
+
+.error-page__actions { display: flex; gap: var(--s-3); flex-wrap: wrap; margin-top: var(--s-2); }
+
+/* ==========================================================================
+   REDUCED MOTION + FORCED COLORS
+   The hard shadow IS the depth cue in this system, so it survives reduced
+   motion — but the transform-based lift does not.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .table tbody tr,
+  .entry,
+  .check,
+  .tab { transition: none !important; }
+  .btn:hover, .card--link:hover, .icon-btn:hover { transform: none; }
+}
+
+@media (forced-colors: active) {
+  .table--dense tbody tr:nth-child(even) { background: Canvas; }
+  .check:has(input:checked),
+  .tab[aria-selected="true"] { background: Highlight; color: HighlightText; forced-color-adjust: none; }
+  .meter__fill, .progress-bar { background: Highlight; forced-color-adjust: none; }
+  .otp__cell, .pagination__page { border: 2px solid ButtonText; }
+}

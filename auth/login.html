@@ -3,25 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - BOG Cloud</title>
-<link rel="stylesheet" href="css/login.css">
+<title>Sign in — BOG Cloud</title>
+<meta name="description" content="Sign in to BOG Cloud to manage your files, vault and API keys.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
 <body>
-  <div class="card">
-    <!-- FIXED: Absolute path for Vercel -->
-    <a href="/index.html"><img src="../images/logo.jpeg" alt="BOG Cloud Logo" class="hero-logo-img"></a> 
-    <h1>Sign in</h1>
-    <p class="sub">to continue to BOG Cloud</p>
-    <div id="alert" class="alert"></div>
-    <form id="loginForm" autocomplete="off">
-      <div class="form-group"><label>Email</label><input type="email" id="email" autocomplete="off" required></div>
-      <div class="form-group"><label>Password</label><input type="password" id="password" autocomplete="new-password" required></div>
-      <button type="submit" class="btn-brand" id="loginBtn">Login</button>
-    </form>
-    <div class="link">Don't have an account? <a href="/auth/signup.html">Create one</a></div>
-    <div class="link"><a href="/auth/reset-password.html">Forgot password?</a></div>
-  </div>
+<a class="skip-link" href="#main">Skip to sign-in form</a>
 
+<div class="auth">
+  <main class="auth__main" id="main">
+    <a class="auth__brand" href="/index.html">
+      <img src="/assets/images/logo.PNG" alt="" width="40" height="40" decoding="async">
+      <span>BOG Cloud</span>
+    </a>
+
+    <div>
+      <h1 class="auth__title">Sign in</h1>
+      <p class="page__sub">Your files, vault and API keys are where you left them.</p>
+    </div>
+
+    <!-- Errors and confirmations are announced, not just drawn. -->
+    <div id="alert" class="alert" role="alert" aria-live="assertive"></div>
+
+    <form class="auth__form" id="loginForm" method="post">
+      <div class="field">
+        <label class="field-label" for="email">Email</label>
+        <input class="field-input" id="email" name="email" type="email"
+               autocomplete="username" inputmode="email" spellcheck="false"
+               required aria-describedby="email-error">
+        <p class="field-error" id="email-error"></p>
+      </div>
+
+      <div class="field">
+        <div class="cluster cluster--between">
+          <label class="field-label" for="password">Password</label>
+          <a class="field-hint" href="/auth/reset-password.html">Forgot password?</a>
+        </div>
+        <div class="reveal">
+          <input class="field-input" id="password" name="password" type="password"
+                 autocomplete="current-password" required aria-describedby="password-error">
+          <button type="button" class="reveal-btn" data-reveal="password"
+                  aria-label="Show password" title="Show password">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5c5 0 9 4.5 9 7s-4 7-9 7-9-4.5-9-7 4-7 9-7zm0 2c-3.6 0-6.6 3.2-6.9 5 .3 1.8 3.3 5 6.9 5s6.6-3.2 6.9-5c-.3-1.8-3.3-5-6.9-5zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg>
+          </button>
+        </div>
+        <p class="field-error" id="password-error"></p>
+      </div>
+
+      <button type="submit" class="btn btn--primary btn--lg btn--block" id="loginBtn">Sign in</button>
+    </form>
+
+    <p class="auth__foot">
+      No account yet? <a href="/auth/signup.html">Start free</a>
+    </p>
+  </main>
+
+  <aside class="auth__aside">
+    <p class="auth__note">Nigerian cloud storage</p>
+    <h2>Storage you can actually audit.</h2>
+    <ul class="auth__list">
+      <li>Every action has a documented REST endpoint. Nothing is console-only.</li>
+      <li>Session list and one-click revocation on every device.</li>
+      <li>API keys are shown once and never again.</li>
+    </ul>
+    <span class="stamp">100GB free</span>
+  </aside>
+</div>
+
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/config.js"></script>
 <script src="javascript/login-1.js"></script>
 </body>
 </html>

@@ -1,118 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOG Cloud - User Profile</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <link rel="stylesheet" href="css/users.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Users — BOG Cloud</title>
+<meta name="description" content="All accounts. Search and inspect.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
-<body>
-
-    <header class="navbar">
-        <div class="nav-left">
-            <button class="hamburger" id="hamburger-btn"><span class="material-icons">menu</span></button>
-            <img src=" /images/logo.jpeg" alt="BOG Cloud Logo" class="logo"> 
-            <h1>BOG Cloud</h1>
-        </div>
-        <div class="nav-right">
-            <button class="theme-toggle" id="theme-toggle"><span class="material-icons" id="theme-icon">dark_mode</span></button>
-            <div class="user-avatar">A</div>
-        </div>
-    </header>
-
-    <div class="overlay" id="overlay"></div>
-
-    <div class="container">
-        <aside class="sidebar" id="sidebar">
-            <ul id="sidebar-menu"></ul>
-        </aside>
-
-        <main class="main-content">
-            <a href="manage-users.html" class="back-btn"><span class="material-icons">arrow_back</span> Back to Users</a>
-
-            <!-- PROFILE HEADER -->
-            <div class="profile-header">
-                <div class="profile-avatar">H</div>
-                <div class="profile-info">
-                    <h2>hannaho21</h2>
-                    <p><span class="material-icons" style="font-size:18px;">email</span> hannah@email.com</p>
-                    <p><span class="material-icons" style="font-size:18px;">calendar_today</span> Joined Aug 12, 2025</p>
-                </div>
-                <div class="profile-actions">
-                    <button class="btn btn-outline"><span class="material-icons">arrow_upward</span> Upgrade</button>
-                    <button class="btn btn-danger"><span class="material-icons">block</span> Ban User</button>
-                </div>
-            </div>
-
-            <div class="grid-2">
-                <!-- ACCOUNT DETAILS -->
-                <div class="card">
-                    <h3 class="card-title"><span class="material-icons">person</span> Account Details</h3>
-                    <div class="info-row">
-                        <span class="info-label">Status</span>
-                        <span class="badge premium"><span class="material-icons" style="font-size:16px;">workspace_premium</span> Premium</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Plan</span>
-                        <span class="info-value">2 TB</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Storage Used</span>
-                        <span class="info-value">1.2 TB / 2 TB</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Last Login</span>
-                        <span class="info-value">2 hours ago</span>
-                    </div>
-                </div>
-
-                <!-- BILLING INFO -->
-                <div class="card">
-                    <h3 class="card-title"><span class="material-icons">receipt_long</span> Billing</h3>
-                    <div class="info-row">
-                        <span class="info-label">Monthly Amount</span>
-                        <span class="info-value">₦7,500</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Next Billing</span>
-                        <span class="info-value">Sep 24, 2026</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Payment Method</span>
-                        <span class="info-value">Paystack Card</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Total Spent</span>
-                        <span class="info-value">₦90,000</span>
-                    </div>
-                </div>
-
-                <!-- RECENT ACTIVITY -->
-                <div class="card" style="grid-column: 1 / -1;">
-                    <h3 class="card-title"><span class="material-icons">history</span> Recent Activity</h3>
-                    <table class="activity-table">
-                        <tr>
-                            <td><span class="material-icons" style="color:var(--green); vertical-align:middle;">upload</span> Uploaded file "report.pdf"</td>
-                            <td style="text-align:right; color:var(--text-gray);">Today, 10:32 AM</td>
-                        </tr>
-                        <tr>
-                            <td><span class="material-icons" style="color:var(--primary-blue); vertical-align:middle;">login</span> Logged in from Lagos, NG</td>
-                            <td style="text-align:right; color:var(--text-gray);">Today, 09:15 AM</td>
-                        </tr>
-                        <tr>
-                            <td><span class="material-icons" style="color:var(--yellow); vertical-align:middle;">payment</span> Payment of ₦7,500 successful</td>
-                            <td style="text-align:right; color:var(--text-gray);">Aug 24, 2026</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-        </main>
+<body data-nav="admin">
+<a class="skip-link" href="#main">Skip to main content</a>
+<div data-shell-topbar></div>
+<div class="shell">
+  <aside data-shell-sidebar></aside>
+  <main class="main" id="main" data-shell-main>
+    <div class="page__head">
+      <div>
+        <h1 class="page__title">Users</h1>
+        <p class="page__sub">All accounts. Search and inspect.</p>
+      </div>
     </div>
+    <div id="alert" class="alert is-hidden" role="status" aria-live="polite"></div>
 
-    <script src="javascript/users-1.js"></script>
+    <section class="section">
+      <div class="toolbar">
+        <label class="sr-only" for="userSearch">Search users</label>
+        <input class="field-input" id="userSearch" type="search" placeholder="Search by name or email" autocomplete="off">
+        <span class="result-count" id="userCount"></span>
+      </div>
+      <div class="table-scroll">
+        <table class="table table--dense">
+          <caption class="sr-only">All users</caption>
+          <thead><tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Role</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+          <tbody id="usersBody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state is-hidden" id="emptyUsers"><h2>No users</h2><p>No accounts found.</p></div>
+      <div class="empty-state is-hidden" id="unwiredNotice"><h2>Not connected</h2><p>Users endpoint not wired (404).</p></div>
+    </section>
+
+  </main>
+</div>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/shell.js"></script>
+<script src="javascript/users-1.js"></script>
 </body>
 </html>

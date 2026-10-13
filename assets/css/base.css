@@ -90,7 +90,7 @@ code, kbd, samp, pre { font-family: var(--font-mono); }
   padding: var(--s-3) var(--s-5);
   background: var(--flag);
   color: var(--on-fill);
-  border: var(--bw) solid var(--edge);
+  border: var(--bw) solid var(--fill-edge);
   box-shadow: var(--sh-2);
   font-family: var(--font-heading);
   font-weight: 700;

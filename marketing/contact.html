@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — BOG Cloud</title>
+<meta name="description" content="Contact BOG Cloud.">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<script src="/assets/js/theme-boot.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<main id="main" class="container" style="padding-block:var(--s-9)">
+<h1>Contact us</h1>
+<p style="color:var(--muted);max-width:60ch">Reach us on WhatsApp or email. We aim to respond within one business day.</p>
+<div class="kv" style="margin-top:var(--s-6);max-width:560px">
+<div class="kv__row"><div class="kv__key">WhatsApp</div><div class="kv__val"><a href="https://wa.me/2347046146228" target="_blank" rel="noopener noreferrer">+234 704 614 6228</a></div></div>
+<div class="kv__row"><div class="kv__key">Email</div><div class="kv__val">support@bogcloud.cv</div></div>
+<div class="kv__row"><div class="kv__key">Location</div><div class="kv__val">Lagos, Nigeria</div></div>
+</div>
+<form style="margin-top:var(--s-7);max-width:560px;display:grid;gap:var(--s-4)" onsubmit="event.preventDefault(); alert('Message sent — we will reply shortly.');">
+<div class="field"><label class="field-label" for="cName">Your name</label><input class="field-input" id="cName" type="text" required autocomplete="name"></div>
+<div class="field"><label class="field-label" for="cEmail">Email</label><input class="field-input" id="cEmail" type="email" required autocomplete="email"></div>
+<div class="field"><label class="field-label" for="cMsg">Message</label><textarea class="field-input" id="cMsg" rows="4" required></textarea></div>
+<button class="btn btn--primary" type="submit">Send message</button>
+</form>
+<p style="margin-top:var(--s-6)"><a class="btn btn--ghost" href="/index.html">Back to home</a></p>
+</main>
+<footer class="site-footer"><div class="container"><div class="site-footer__base"><span>&copy; 2026 BOG Cloud</span><span><a href="/marketing/privacy.html">Privacy</a> · <a href="/marketing/terms.html">Terms</a></span></div></div></footer>
+</body>
+</html>

@@ -1,87 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOG Cloud - Analytics</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <link rel="stylesheet" href="css/analytics.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics — BOG Cloud</title>
+<meta name="description" content="Usage and growth. Shows “not connected” until the analytics endpoint exists.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
-<body>
-
-    <!-- HEADER -->
-    <header class="navbar">
-        <div class="nav-left">
-            <button class="hamburger" id="hamburger-btn">
-                <span class="material-icons">menu</span>
-            </button>
-            <!-- Logo path: go up 1 folder then into images -->
-            <img src=" /images/logo.jpeg" alt="BOG Cloud Logo" class="logo"> 
-            <h1>BOG Cloud</h1>
-        </div>
-        <div class="nav-right">
-            <!-- REAL ICON THEME TOGGLE -->
-            <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">
-                <span class="material-icons" id="theme-icon">dark_mode</span>
-            </button>
-            <div class="user-avatar">U</div>
-        </div>
-    </header>
-
-    <!-- OVERLAY TO CLOSE SIDEBAR -->
-    <div class="overlay" id="overlay"></div>
-
-    <div class="container">
-        <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
-            <ul id="sidebar-menu"></ul>
-        </aside>
-
-        <!-- MAIN CONTENT -->
-        <main class="main-content">
-            <h2>Analytics</h2>
-            <p>Track your platform performance</p>
-            
-            <!-- Stats Cards -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="label">Active Users Today</div>
-                    <div class="value">842</div>
-                    <div class="change">+15.3% vs yesterday</div>
-                </div>
-                <div class="stat-card">
-                    <div class="label">New Signups</div>
-                    <div class="value">127</div>
-                    <div class="change">+8.1% this week</div>
-                </div>
-                <div class="stat-card">
-                    <div class="label">Page Views</div>
-                    <div class="value">45.2K</div>
-                    <div class="change">+22.4% this month</div>
-                </div>
-            </div>
-
-            <!-- Chart Placeholder -->
-            <div class="chart-card">
-                <h3 style="margin-bottom: 16px;">User Growth - Last 30 Days</h3>
-                <p style="color: var(--text-gray);">Chart will go here. You can connect Chart.js later.</p>
-                <div style="height: 300px; background: var(--light-blue); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-gray);">
-                    Chart Area
-                </div>
-            </div>
-
-            <div class="chart-card">
-                <h3 style="margin-bottom: 16px;">Top Pages</h3>
-                <p>1. Dashboard - 12,450 views</p>
-                <p>2. Login - 8,230 views</p>
-                <p>3. Analytics - 5,120 views</p>
-            </div>
-
-        </main>
+<body data-nav="admin">
+<a class="skip-link" href="#main">Skip to main content</a>
+<div data-shell-topbar></div>
+<div class="shell">
+  <aside data-shell-sidebar></aside>
+  <main class="main" id="main" data-shell-main>
+    <div class="page__head">
+      <div>
+        <h1 class="page__title">Analytics</h1>
+        <p class="page__sub">Usage and growth. Shows “not connected” until the analytics endpoint exists.</p>
+      </div>
     </div>
+    <div id="alert" class="alert is-hidden" role="status" aria-live="polite"></div>
 
-    <script src="javascript/analytics-1.js"></script>
+    <section class="section">
+      <div class="stat-grid stat-grid--dense">
+        <div class="stat stat--dense"><div class="stat__label">Active users</div><div class="stat__value" id="aActive">—</div><div class="stat__context" id="aActiveCtx"></div></div>
+        <div class="stat stat--dense"><div class="stat__label">Uploads today</div><div class="stat__value" id="aUploads">—</div><div class="stat__context" id="aUploadsCtx"></div></div>
+        <div class="stat stat--dense"><div class="stat__label">Avg. response</div><div class="stat__value" id="aResp">—</div><div class="stat__context" id="aRespCtx"></div></div>
+      </div>
+      <div class="empty-state is-hidden" id="unwiredNotice"><h2>Not connected</h2><p>Analytics endpoint not wired (404).</p></div>
+    </section>
+
+  </main>
+</div>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/shell.js"></script>
+<script src="javascript/analytics-1.js"></script>
 </body>
 </html>

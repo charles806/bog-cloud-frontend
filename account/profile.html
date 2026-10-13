@@ -3,92 +3,96 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BOG Cloud - Profile</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-<script src="javascript/profile-1.js"></script>
-<link rel="stylesheet" href="css/profile.css">
+<title>Profile — BOG Cloud</title>
+<meta name="description" content="Manage your display name, email and password.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
-<body>
-  <div class="topbar">
-    <div class="topbar-left">
-      <a href="/dashboard/dashboard.html" class="logo">
-        <img src=" /images/logo.jpeg" alt="BOG Cloud Logo" class="logo-img" onerror="this.style.display='none';">
-      </a>
-    </div>
-    <div class="topbar-right">
-      <button class="icon-btn" id="themeToggle" title="Toggle Theme">Dark</button>
-    </div>
-  </div>
-
-  <div class="container">
-    <a href="/dashboard/dashboard.html" class="back-link">← Back to Drive</a>
-
-    <div class="profile-card">
-      <div id="alertBox" class="alert"></div>
-
-      <div class="profile-header">
-        <div class="profile-avatar" id="profileAvatar">B</div>
-        <div class="profile-info">
-          <h1 id="profileName">Loading...</h1>
-          <p id="profileEmail">loading@email.com</p>
-        </div>
+<body data-nav="app">
+<a class="skip-link" href="#main">Skip to main content</a>
+<div data-shell-topbar></div>
+<div class="shell">
+  <aside data-shell-sidebar></aside>
+  <main class="main" id="main" data-shell-main>
+    <div class="page__head">
+      <div>
+        <h1 class="page__title">Profile</h1>
+        <p class="page__sub">Manage your display name, email and password.</p>
       </div>
+    </div>
+    <div id="alert" class="alert is-hidden" role="status" aria-live="polite"></div>
+    <div id="alertBox" class="alert is-hidden" role="status" aria-live="polite"></div>
 
-      <div class="section">
-        <div class="section-title">Personal Info</div>
-        <div class="row">
+    <section class="section">
+      <div class="card">
+        <div style="display:flex;gap:var(--s-4);align-items:center">
+          <div class="avatar" id="profileAvatar" style="width:56px;height:56px;font-size:22px">—</div>
           <div>
-            <div class="row-label">Display Name</div>
-            <div class="row-value" id="displayName">User</div>
-          </div>
-          <button class="btn btn-outline" onclick="toggleNameForm()">Edit</button>
-        </div>
-        <div class="inline-form" id="nameForm">
-          <div class="form-group">
-            <label>New Display Name</label>
-            <input type="text" id="newNameInput" placeholder="Enter your name">
-          </div>
-          <button class="btn" id="saveNameBtn" onclick="saveName()">Save Name</button>
-          <button class="btn btn-secondary" onclick="toggleNameForm()">Cancel</button>
-        </div>
-
-        <div class="row">
-          <div>
-            <div class="row-label">Email</div>
-            <div class="row-value" id="displayEmail">user@email.com</div>
+            <div style="font-weight:700;font-size:var(--fs-h3)" id="profileName">Loading…</div>
+            <div style="color:var(--muted);font-family:var(--font-mono);font-size:var(--fs-sm)" id="profileEmail">—</div>
           </div>
         </div>
       </div>
-
-      <div class="section">
-        <div class="section-title">Security</div>
-        <button class="btn btn-outline" onclick="togglePasswordForm()">Change Password</button>
-
-        <div class="inline-form" id="passwordForm">
-          <div class="form-group">
-            <label>Current Password</label>
-            <input type="password" id="currentPassword" placeholder="Enter your current password">
-          </div>
-          <div class="form-group">
-            <label>New Password</label>
-            <input type="password" id="newPassword" placeholder="Enter new password, min 6 characters">
-          </div>
-          <div class="form-group">
-            <label>Confirm New Password</label>
-            <input type="password" id="confirmPassword" placeholder="Confirm new password">
-          </div>
-          <button class="btn" id="updatePassBtn" onclick="savePassword()">Update Password</button>
-          <button class="btn btn-secondary" onclick="togglePasswordForm()">Cancel</button>
+    </section>
+    <section class="section">
+      <h2 class="section__title">Personal info</h2>
+      <div class="kv">
+        <div class="kv__row"><div class="kv__key">Display name</div><div class="kv__val" id="displayName">—</div></div>
+        <div class="kv__row"><div class="kv__key">Email</div><div class="kv__val" id="displayEmail">—</div></div>
+      </div>
+      <div class="cluster" style="margin-top:var(--s-3)"><button class="btn btn--ghost" type="button" id="toggleNameBtn">Edit name</button></div>
+      <div class="card is-hidden" id="nameForm" style="margin-top:var(--s-4)">
+        <div class="field">
+          <label class="field-label" for="newNameInput">New display name</label>
+          <input class="field-input" id="newNameInput" type="text" placeholder="Enter your name" autocomplete="name">
+          <p class="field-error" id="newNameError" hidden></p>
+        </div>
+        <div class="cluster" style="margin-top:var(--s-4)">
+          <button class="btn btn--primary" type="button" id="saveNameBtn">Save Name</button>
+          <button class="btn btn--ghost" type="button" id="cancelNameBtn">Cancel</button>
         </div>
       </div>
-
-      <div class="section">
-        <div class="section-title">Account</div>
-        <button class="btn btn-danger" onclick="logout()">Sign Out</button>
+    </section>
+    <section class="section">
+      <h2 class="section__title">Security</h2>
+      <div class="cluster"><button class="btn btn--ghost" type="button" id="togglePasswordBtn">Change password</button></div>
+      <div class="card is-hidden" id="passwordForm" style="margin-top:var(--s-4);display:grid;gap:var(--s-4)">
+        <div class="field">
+          <label class="field-label" for="currentPassword">Current password</label>
+          <input class="field-input" id="currentPassword" type="password" autocomplete="current-password">
+        </div>
+        <div class="field">
+          <label class="field-label" for="newPassword">New password</label>
+          <input class="field-input" id="newPassword" type="password" autocomplete="new-password">
+        </div>
+        <div class="field">
+          <label class="field-label" for="confirmPassword">Confirm new password</label>
+          <input class="field-input" id="confirmPassword" type="password" autocomplete="new-password">
+        </div>
+        <div class="cluster">
+          <button class="btn btn--primary" type="button" id="updatePassBtn">Update password</button>
+          <button class="btn btn--ghost" type="button" id="cancelPasswordBtn">Cancel</button>
+        </div>
       </div>
-    </div>
-  </div>
+    </section>
+    <section class="section">
+      <h2 class="section__title">Account</h2>
+      <button class="btn btn--danger" type="button" id="signOutBtn">Sign out</button>
+    </section>
 
+  </main>
+</div>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/shell.js"></script>
 <script type="module" src="javascript/profile-2.js"></script>
 </body>
 </html>

@@ -1,55 +1,25 @@
-// TEMP ADMIN MODE
-        const isAdmin = true; 
-
-        function loadSidebar() {
-            const sidebarMenu = document.getElementById('sidebar-menu');
-            let menuHTML = `
-                <li><a href="analytics.html" class="active"><span class="material-icons">analytics</span> Analytics</a></li>
-                <li><a href="billing.html"><span class="material-icons">receipt_long</span> Billing</a></li>
-                <li><a href="manage-users.html"><span class="material-icons">group</span> Manage Users</a></li>
-                <li><a href="storage-analysis.html"><span class="material-icons">storage</span> Storage Analysis</a></li>
-                <li><a href="users.html"><span class="material-icons">person</span> Users</a></li>
-            `;
-            if (isAdmin === true) {
-                menuHTML += `<li class="admin-menu"><a href="admin-dashboard.html"><span class="material-icons">admin_panel_settings</span> ADMIN PANEL</a></li>`;
-            }
-            sidebarMenu.innerHTML = menuHTML;
-        }
-
-        // HAMBURGER TOGGLE
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        document.getElementById('hamburger-btn').addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        });
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-
-        // ===== DARK/LIGHT THEME TOGGLE WITH REAL ICONS =====
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeIcon = document.getElementById('theme-icon');
-        const body = document.body;
-
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            body.classList.add('dark-mode');
-            themeIcon.textContent = 'light_mode'; // Sun icon
-        }
-
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            
-            if (body.classList.contains('dark-mode')) {
-                localStorage.setItem('theme', 'dark');
-                themeIcon.textContent = 'light_mode'; // Show sun to switch to light
-            } else {
-                localStorage.setItem('theme', 'light');
-                themeIcon.textContent = 'dark_mode'; // Show moon to switch to dark
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', loadSidebar);
+/* Admin Analytics */
+(function(){
+  var C = window.BOG.config, BOG = window.BOG;
+  var el = {
+    alert: document.getElementById('alert'),
+    active: document.getElementById('aActive'),
+    uploads: document.getElementById('aUploads'),
+    resp: document.getElementById('aResp'),
+    unwired: document.getElementById('unwiredNotice'),
+  };
+  function start(){ BOG.mountApp({search:false}); if(!BOG.isAdmin()) return; load(); }
+  async function load(){
+    try{
+      var data = await C.adminFetch('analytics');
+      if(el.active) el.active.textContent = C.pick(data, ['activeUsers','active','users']) ?? '—';
+      if(el.uploads) el.uploads.textContent = C.pick(data, ['uploads','uploadsToday','today']) ?? '—';
+      var resp = C.pick(data, ['avgResponse','response','latency']);
+      if(el.resp) el.resp.textContent = resp != null ? String(resp) + ' ms' : '—';
+    }catch(err){
+      if(err && err.isUnwired && err.isUnwired()){ if(el.unwired) el.unwired.classList.remove('is-hidden'); return;}
+      if(el.alert) BOG.alert(el.alert, err.message, 'error');
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();

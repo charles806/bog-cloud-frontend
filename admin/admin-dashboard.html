@@ -1,71 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOG Cloud - Admin Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <link rel="stylesheet" href="css/admin-dashboard.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — BOG Cloud</title>
+<meta name="description" content="Platform overview. Read from the admin API — never invented.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
-<body>
+<body data-nav="admin">
+<a class="skip-link" href="#main">Skip to main content</a>
+<div data-shell-topbar></div>
+<div class="shell">
+  <aside data-shell-sidebar></aside>
+  <main class="main" id="main" data-shell-main>
+    <div class="page__head">
+      <div>
+        <h1 class="page__title">Admin Dashboard</h1>
+        <p class="page__sub">Platform overview. Read from the admin API — never invented.</p>
+      </div>
+    </div>
+    <div id="alert" class="alert is-hidden" role="status" aria-live="polite"></div>
 
-    <!-- HEADER -->
-    <header class="navbar">
-        <div class="nav-left">
-            <button class="hamburger" id="hamburger-btn">
-                <span class="material-icons">menu</span>
-            </button>
-            <img src=" /images/logo.jpeg" alt="BOG Cloud Logo" class="logo"> 
-            <h1>BOG Cloud</h1>
-        </div>
-        <div class="nav-right">
-            <!-- REAL ICON THEME TOGGLE -->
-            <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">
-                <span class="material-icons" id="theme-icon">dark_mode</span>
-            </button>
-            <div class="user-avatar">U</div>
-        </div>
-    </header>
-
-    <!-- OVERLAY TO CLOSE SIDEBAR -->
-    <div class="overlay" id="overlay"></div>
-
-    <div class="container">
-        <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
-            <ul id="sidebar-menu"></ul>
-        </aside>
-
-        <!-- MAIN CONTENT -->
-        <main class="main-content">
-            <h2>Admin Dashboard</h2>
-            <p>Overview</p>
-            
-            <div class="card-grid">
-                <div class="card">
-                    <div class="label">Total Users</div>
-                    <div class="value">1,248</div>
-                    <div class="change">+12.5% this month</div>
-                </div>
-                <div class="card">
-                    <div class="label">Total Storage Used</div>
-                    <div class="value">4.2 TB</div>
-                    <div class="change">+8.2% this month</div>
-                </div>
-                <div class="card">
-                    <div class="label">Monthly Revenue</div>
-                    <div class="value">$12,430</div>
-                </div>
-                <div class="card">
-                    <div class="label">API Calls</div>
-                    <div class="value">1.2M</div>
-                </div>
-            </div>
-        </main>
+    <div class="stat-grid stat-grid--dense" id="statsGrid">
+      <div class="stat stat--dense"><div class="stat__label">Total users</div><div class="stat__value" id="statUsers">—</div><div class="stat__context" id="statUsersDelta"></div></div>
+      <div class="stat stat--dense"><div class="stat__label">Storage used</div><div class="stat__value" id="statStorage">—</div><div class="stat__context" id="statStorageDelta"></div></div>
+      <div class="stat stat--dense"><div class="stat__label">Monthly revenue</div><div class="stat__value" id="statRevenue">—</div><div class="stat__context" id="statRevenueDelta"></div></div>
+      <div class="stat stat--dense"><div class="stat__label">API calls</div><div class="stat__value" id="statApi">—</div><div class="stat__context" id="statApiDelta"></div></div>
+    </div>
+    <div class="empty-state is-hidden" id="unwiredNotice">
+      <div class="empty-state__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
+      <h2>Not connected</h2>
+      <p>This admin endpoint is not wired yet. The API returned 404, so no figures are shown rather than invented ones.</p>
     </div>
 
-    <script src="javascript/admin-dashboard-1.js"></script>
+  </main>
+</div>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/shell.js"></script>
+<script src="javascript/admin-dashboard-1.js"></script>
 </body>
 </html>

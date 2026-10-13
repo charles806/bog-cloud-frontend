@@ -3,24 +3,76 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Verify Email - BOG Cloud</title>
-<link rel="stylesheet" href="css/verify-otp.css">
+<title>Verify your email — BOG Cloud</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
 <body>
-  <div class="card">
-    <div class="logo-b">B</div>
-    <h2>Verify your email</h2>
-    <p>We sent a verification link to <strong id="userEmail">your email</strong>. Click the link, then come back and click below.</p>
-   
-    <button class="btn-brand" onclick="checkVerification()">I've verified my email</button>
-    <button class="btn-outline" onclick="resendEmail()">Resend verification email</button>
-   
-    <div class="footer-link">
-      Wrong email? <a href="#" class="link" onclick="goToSignup()">Go back to Sign up</a>
-    </div>
-    <div id="error" class="error-msg"></div>
-  </div>
+<a class="skip-link" href="#main">Skip to verification status</a>
 
+<div class="auth">
+  <main class="auth__main" id="main">
+    <a class="auth__brand" href="/index.html">
+      <img src="/assets/images/logo.PNG" alt="" width="40" height="40" decoding="async">
+      <span>BOG Cloud</span>
+    </a>
+
+    <div>
+      <h1 class="auth__title">Verify your email</h1>
+      <p class="page__sub">
+        We sent a verification link to <strong id="userEmail">your email address</strong>.
+        Open it, then come back and confirm below.
+      </p>
+    </div>
+
+    <div id="error" class="alert" role="alert" aria-live="assertive"></div>
+
+    <div class="cluster">
+      <button type="button" class="btn btn--primary btn--lg" id="checkBtn">I have verified my email</button>
+      <button type="button" class="btn btn--ghost" id="resendBtn">Resend the email</button>
+    </div>
+
+    <div class="timeline" aria-label="What happens next">
+      <div class="timeline__item">
+        <p class="timeline__title">Open the link in the email</p>
+        <p class="timeline__meta">Check spam or promotions if it has not arrived</p>
+      </div>
+      <div class="timeline__item">
+        <p class="timeline__title">Return here and confirm</p>
+        <p class="timeline__meta">This page re-checks with the server</p>
+      </div>
+      <div class="timeline__item">
+        <p class="timeline__title">Land in your drive</p>
+        <p class="timeline__meta">Uploads and API keys unlock at this point</p>
+      </div>
+    </div>
+
+    <p class="auth__foot">
+      Wrong address? <a href="#" id="goSignup">Sign up again</a>
+    </p>
+  </main>
+
+  <aside class="auth__aside">
+    <p class="auth__note">Why we ask</p>
+    <h2>An address you did not choose is not an address you own.</h2>
+    <ul class="auth__list">
+      <li>Verification blocks sign-ups made with someone else's inbox.</li>
+      <li>Password resets only go somewhere you can prove you read.</li>
+      <li>It is a one-time step. Nothing is sent to you afterwards unasked.</li>
+    </ul>
+  </aside>
+</div>
+
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/config.js"></script>
 <script type="module" src="javascript/verify-otp-1.js"></script>
 </body>
 </html>

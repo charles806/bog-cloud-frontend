@@ -24,8 +24,22 @@
   --edge:   var(--ink);
   --shade:  var(--ink);
 
+  /* The border on a LIGHT signal fill. Deliberately NOT theme-dependent.
+     --edge flips to --paper in dark mode, but --flag/--live/--sky/--alert are
+     fixed light pastels that do not change with the theme — so an --edge border
+     on them went to 1.42:1 in dark mode and disappeared. A light fill always
+     takes a dark border, in both themes. */
+  --fill-edge: #0A0A0A;
+
   --bg:      #FFFDF5;   /* page */
   --surface: #FFFFFF;   /* cards, panels, table bodies */
+  --surface-2:#F4F2EA;   /* wells, zebra rows, secondary panels */
+
+  /* Row separation for dense tables. Deliberately NOT a signal fill and NOT
+     --brand-50: a saturated tint under every second row of a 200-row table
+     reads as noise. Text sits at 19.5:1 on --row-alt light, 17:1 dark. */
+  --row-alt:  #FAFAF7;
+  --row-hover:var(--brand-50);
 
   /* --- BRAND RAMP (Ramps / OKLCH / AAA) ---------------------------------- */
   --brand-50:  #F2F6FF;
@@ -132,6 +146,8 @@
 
   --bg:      #0A0A0A;
   --surface: #16161A;
+  --surface-2:#1E1E24;
+  --row-alt:  #1C1C21;
 
   --text:    #FFFDF5;
   --muted:   #B8BCC4;

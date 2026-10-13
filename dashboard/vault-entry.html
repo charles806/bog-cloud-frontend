@@ -3,27 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vault Entry - BOG Cloud</title>
-<link rel="stylesheet" href="css/vault-entry.css">
+<title>Vault Entry — BOG Cloud</title>
+<meta name="description" content="Add or edit a credential stored in your vault.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
-<body>
-  <div class="card">
-    <h2 id="formTitle">New Vault Entry</h2>
-    <div class="form-group">
-      <label>Type</label>
-      <select id="type">
-        <option value="Password">Password</option>
-        <option value="Note">Secure Note</option>
-        <option value="Card">Credit Card</option>
-      </select>
+<body data-nav="app">
+<a class="skip-link" href="#main">Skip to main content</a>
+<div data-shell-topbar></div>
+<div class="shell">
+  <aside data-shell-sidebar></aside>
+  <main class="main" id="main" data-shell-main>
+    <div class="page__head">
+      <div>
+        <h1 class="page__title">Vault Entry</h1>
+        <p class="page__sub">Add or edit a credential stored in your vault.</p>
+      </div>
     </div>
-    <div class="form-group"><label>Title</label><input id="title" placeholder="Netflix"></div>
-    <div class="form-group"><label>Username / Email</label><input id="username" placeholder="user@email.com"></div>
-    <div class="form-group"><label>Password</label><input id="password" type="password" placeholder="••••"></div>
-    <div class="form-group"><label>URL</label><input id="url" placeholder="https://netflix.com"></div>
-    <button class="btn-brand" onclick="saveEntry()">Save Entry</button>
-    <a href="vault.html" class="btn-secondary">Cancel</a>
-  </div>
+    <div id="alert" class="alert is-hidden" role="status" aria-live="polite"></div>
+
+    <section class="section">
+      <div class="card">
+        <h2 class="section__title" id="formTitle">New Vault Entry</h2>
+        <form id="vaultEntryForm" novalidate style="display:grid;gap:var(--s-4);margin-top:var(--s-4)">
+          <div class="field">
+            <label class="field-label" for="type">Type</label>
+            <select class="field-input" id="type" name="type">
+              <option value="Password">Password</option>
+              <option value="Note">Secure Note</option>
+              <option value="Card">Credit Card</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label" for="title">Title</label>
+            <input class="field-input" id="title" name="title" type="text" placeholder="Netflix" required autocomplete="off">
+            <p class="field-error" id="titleError" hidden></p>
+          </div>
+          <div class="field">
+            <label class="field-label" for="username">Username / Email</label>
+            <input class="field-input" id="username" name="username" type="text" placeholder="user@email.com" autocomplete="username">
+          </div>
+          <div class="field">
+            <label class="field-label" for="password">Password</label>
+            <div class="reveal">
+              <input class="field-input" id="password" name="password" type="password" placeholder="••••" autocomplete="new-password">
+              <button class="reveal-btn" type="button" id="revealToggle" aria-label="Show password" aria-pressed="false" data-reveal="password"></button>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="url">URL</label>
+            <input class="field-input" id="url" name="url" type="url" placeholder="https://netflix.com" autocomplete="url" spellcheck="false">
+          </div>
+          <div class="cluster">
+            <button class="btn btn--primary" type="submit" id="saveBtn">Save Entry</button>
+            <a class="btn btn--ghost" href="vault.html">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+</div>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/shell.js"></script>
 <script type="module" src="javascript/vault-entry-1.js"></script>
 </body>
 </html>

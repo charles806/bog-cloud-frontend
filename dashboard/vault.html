@@ -3,37 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Password Vault - BOG Cloud</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/vault.css">
+<title>Password vault — BOG Cloud</title>
+<meta name="description" content="Your BOG Cloud password vault.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
-<body>
+<body data-nav="app">
+<a class="skip-link" href="#main">Skip to your vault</a>
 
-<div class="vault-container">
-  <div class="vault-header">
-    <h1>Password Vault</h1>
-    <button class="btn btn-primary" onclick="openModal()">
-      <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-      Add Password
-    </button>
-  </div>
-  <div id="vaultList"></div>
-</div>
+<div data-shell-topbar></div>
 
-<!-- Add/Edit Modal -->
-<div class="modal" id="vaultModal">
-  <div class="modal-content">
-    <h2 id="modalTitle">Add New Password</h2>
-    <input type="text" id="siteInput" placeholder="Website e.g. google.com">
-    <input type="email" id="emailInput" placeholder="Email / Username">
-    <input type="password" id="passwordInput" placeholder="Password">
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="savePassword()">Save</button>
+<div class="shell">
+  <aside data-shell-sidebar></aside>
+
+  <main class="main" id="main" data-shell-main>
+
+    <div class="page__head">
+      <div>
+        <h1 class="page__title">Password vault</h1>
+        <p class="page__sub">Stored against your account. Reveal a password only when you need it.</p>
+      </div>
+      <div class="page__actions">
+        <button class="btn btn--primary" id="addBtn" type="button">Add password</button>
+      </div>
     </div>
+
+    <div id="alert" class="alert is-hidden" role="status" aria-live="polite"></div>
+
+    <section class="section">
+      <div class="section__head">
+        <h2 class="section__title">Saved items</h2>
+        <span class="result-count" id="vaultCount"></span>
+      </div>
+
+      <div class="skeleton" id="vaultSkeleton" aria-hidden="true">
+        <div class="skeleton__row"></div>
+        <div class="skeleton__row"></div>
+        <div class="skeleton__row"></div>
+      </div>
+
+      <!-- Rows are built with DOM nodes, never innerHTML. The old version
+           interpolated site, email and the password itself into markup, so a
+           vault entry containing a quote or a tag could run script. -->
+      <div class="entry-list" id="vaultList" role="list"></div>
+
+      <div class="empty-state is-hidden" id="vaultEmpty">
+        <div class="empty-state__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        </div>
+        <h3>Your vault is empty</h3>
+        <p>Add the first login and BOG Cloud will keep it here for you.</p>
+        <button class="btn btn--flag" type="button" id="addBtnEmpty">Add a password</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Add / edit. A real dialog: labelled fields, focus trap, Escape to close.
+     The old markup was a div with three placeholder-only inputs and no role,
+     no focus management and no way to close it with the keyboard. -->
+<div class="modal" id="vaultModal" hidden>
+  <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal__head">
+      <h2 id="modalTitle">Add password</h2>
+    </div>
+
+    <form id="vaultForm" novalidate>
+      <div class="field">
+        <label class="field-label" for="siteInput">Website or app</label>
+        <input class="field-input" id="siteInput" name="site" type="text"
+               autocomplete="off" spellcheck="false"
+               placeholder="google.com" required>
+        <p class="field-error" id="siteError" hidden></p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="emailInput">Username or email</label>
+        <input class="field-input" id="emailInput" name="email" type="text"
+               autocomplete="off" spellcheck="false"
+               placeholder="you@example.com" required>
+        <p class="field-error" id="emailError" hidden></p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="passwordInput">Password</label>
+        <div class="reveal">
+          <input class="field-input" id="passwordInput" name="password" type="password"
+                 autocomplete="new-password" required>
+          <button class="reveal-btn" type="button" id="revealToggle"
+                  aria-label="Show password" aria-pressed="false"></button>
+        </div>
+        <p class="field-hint">Stored so only you can read it. Reveal it when you need it.</p>
+        <p class="field-error" id="passwordError" hidden></p>
+      </div>
+
+      <div class="modal__actions">
+        <button class="btn btn--ghost" type="button" id="cancelBtn">Cancel</button>
+        <button class="btn btn--primary" type="submit" id="saveBtn">Save</button>
+      </div>
+    </form>
   </div>
 </div>
 
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/shell.js"></script>
 <script type="module" src="javascript/vault-1.js"></script>
 </body>
 </html>

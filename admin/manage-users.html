@@ -1,109 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOG Cloud - Manage Users</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <link rel="stylesheet" href="css/manage-users.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Users — BOG Cloud</title>
+<meta name="description" content="Change roles and manage accounts.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
-<body>
-
-    <header class="navbar">
-        <div class="nav-left">
-            <button class="hamburger" id="hamburger-btn"><span class="material-icons">menu</span></button>
-            <img src=" /images/logo.jpeg" alt="BOG Cloud Logo" class="logo"> 
-            <h1>BOG Cloud</h1>
-        </div>
-        <div class="nav-right">
-            <button class="theme-toggle" id="theme-toggle"><span class="material-icons" id="theme-icon">dark_mode</span></button>
-            <div class="user-avatar">A</div>
-        </div>
-    </header>
-
-    <div class="overlay" id="overlay"></div>
-
-    <div class="container">
-        <aside class="sidebar" id="sidebar">
-            <ul id="sidebar-menu"></ul>
-        </aside>
-
-        <main class="main-content">
-            <h2>Manage Users</h2>
-            <p>View, search and manage all platform users</p>
-
-            <!-- TOOLBAR -->
-            <div class="toolbar">
-                <div class="search-wrapper">
-                    <span class="material-icons">search</span>
-                    <input type="text" class="search-box" placeholder="Search by name or email...">
-                </div>
-                <button class="filter-btn"><span class="material-icons">filter_list</span> Filter</button>
-            </div>
-
-            <!-- USERS TABLE -->
-            <div class="card">
-                <table class="users-table">
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Email</th>
-                            <th>Plan</th>
-                            <th>Storage</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="users-tbody">
-                        <tr>
-                            <td>hannaho21</td>
-                            <td>hannah@email.com</td>
-                            <td>2 TB</td>
-                            <td>1.2 TB</td>
-                            <td><span class="badge premium"><span class="material-icons">workspace_premium</span>Premium</span></td>
-                            <td>
-                                <div class="action-group">
-                                    <button class="action-btn btn-upgrade" data-tooltip="Upgrade User"><span class="material-icons">arrow_upward</span></button>
-                                    <button class="action-btn btn-ban" data-tooltip="Ban User"><span class="material-icons">block</span></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>john.doe</td>
-                            <td>john@email.com</td>
-                            <td>200 GB</td>
-                            <td>120 GB</td>
-                            <td><span class="badge active"><span class="material-icons">check_circle</span>Active</span></td>
-                            <td>
-                                <div class="action-group">
-                                    <button class="action-btn btn-upgrade" data-tooltip="Upgrade User"><span class="material-icons">arrow_upward</span></button>
-                                    <button class="action-btn btn-ban" data-tooltip="Ban User"><span class="material-icons">block</span></button>
-                                    <button class="action-btn btn-delete" data-tooltip="Delete User"><span class="material-icons">delete</span></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>sarah_k</td>
-                            <td>sarah@email.com</td>
-                            <td>100 GB</td>
-                            <td>95 GB</td>
-                            <td><span class="badge banned"><span class="material-icons">block</span>Banned</span></td>
-                            <td>
-                                <div class="action-group">
-                                    <button class="action-btn btn-upgrade" data-tooltip="Unban User"><span class="material-icons">check_circle</span></button>
-                                    <button class="action-btn btn-delete" data-tooltip="Delete User"><span class="material-icons">delete</span></button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </main>
+<body data-nav="admin">
+<a class="skip-link" href="#main">Skip to main content</a>
+<div data-shell-topbar></div>
+<div class="shell">
+  <aside data-shell-sidebar></aside>
+  <main class="main" id="main" data-shell-main>
+    <div class="page__head">
+      <div>
+        <h1 class="page__title">Manage Users</h1>
+        <p class="page__sub">Change roles and manage accounts.</p>
+      </div>
     </div>
+    <div id="alert" class="alert is-hidden" role="status" aria-live="polite"></div>
 
-    <script src="javascript/manage-users-1.js"></script>
+    <section class="section">
+      <div class="filter-bar">
+        <div class="field">
+          <label class="field-label" for="manageSearch">Search users</label>
+          <input class="field-input" id="manageSearch" type="search" placeholder="Filter by email or name" autocomplete="off">
+        </div>
+        <span class="result-count" id="manageCount"></span>
+      </div>
+      <div class="table-scroll">
+        <table class="table table--dense">
+          <caption class="sr-only">Manage users</caption>
+          <thead><tr><th scope="col">User</th><th scope="col">Role</th><th scope="col">Joined</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+          <tbody id="manageBody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state is-hidden" id="manageEmpty"><h2>No users</h2><p>No accounts to manage.</p></div>
+      <div class="empty-state is-hidden" id="unwiredNotice"><h2>Not connected</h2><p>Users endpoint not wired (404).</p></div>
+    </section>
+
+  </main>
+</div>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/shell.js"></script>
+<script src="javascript/manage-users-1.js"></script>
 </body>
 </html>

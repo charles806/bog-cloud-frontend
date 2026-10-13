@@ -1,138 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOG Cloud - Storage Analysis</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <link rel="stylesheet" href="css/storage-analysis.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Storage Analysis — BOG Cloud</title>
+<meta name="description" content="Breakdown of stored bytes by bucket and plan.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
-<body>
-
-    <header class="navbar">
-        <div class="nav-left">
-            <button class="hamburger" id="hamburger-btn"><span class="material-icons">menu</span></button>
-            <img src=" /images/logo.jpeg" alt="BOG Cloud Logo" class="logo"> 
-            <h1>BOG Cloud</h1>
-        </div>
-        <div class="nav-right">
-            <button class="theme-toggle" id="theme-toggle"><span class="material-icons" id="theme-icon">dark_mode</span></button>
-            <div class="user-avatar">A</div>
-        </div>
-    </header>
-
-    <div class="overlay" id="overlay"></div>
-
-    <div class="container">
-        <aside class="sidebar" id="sidebar">
-            <ul id="sidebar-menu"></ul>
-        </aside>
-
-        <main class="main-content">
-            <h2><span class="material-icons">storage</span> Storage Analysis</h2>
-            <p>Monitor platform storage usage and top consumers</p>
-
-            <!-- STATS CARDS -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon"><span class="material-icons">cloud</span></div>
-                    <div class="stat-info">
-                        <div class="label">Total Storage Used</div>
-                        <div class="value">4.2 TB</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><span class="material-icons">people</span></div>
-                    <div class="stat-info">
-                        <div class="label">Avg per User</div>
-                        <div class="value">3.4 GB</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><span class="material-icons">trending_up</span></div>
-                    <div class="stat-info">
-                        <div class="label">Growth This Month</div>
-                        <div class="value">+8.2%</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- STORAGE BY PLAN -->
-            <div class="card">
-                <div class="card-header">
-                    <span class="material-icons">pie_chart</span>
-                    <h3>Storage by Plan</h3>
-                </div>
-                <div class="breakdown-item">
-                    <div class="breakdown-top">
-                        <span>2 TB Plan - 42 Users</span>
-                        <span>2.8 TB / 66%</span>
-                    </div>
-                    <div class="progress-bar"><div class="progress-fill" style="width: 66%"></div></div>
-                </div>
-                <div class="breakdown-item">
-                    <div class="breakdown-top">
-                        <span>200 GB Plan - 310 Users</span>
-                        <span>980 GB / 23%</span>
-                    </div>
-                    <div class="progress-bar"><div class="progress-fill" style="width: 23%"></div></div>
-                </div>
-                <div class="breakdown-item">
-                    <div class="breakdown-top">
-                        <span>100 GB Plan - 896 Users</span>
-                        <span>420 GB / 11%</span>
-                    </div>
-                    <div class="progress-bar"><div class="progress-fill" style="width: 11%"></div></div>
-                </div>
-            </div>
-
-            <!-- TOP STORAGE USERS -->
-            <div class="card">
-                <div class="card-header">
-                    <span class="material-icons">leaderboard</span>
-                    <h3>Top Storage Users</h3>
-                </div>
-                <table class="storage-table">
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Email</th>
-                            <th>Plan</th>
-                            <th>Storage Used</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>hannaho21</td>
-                            <td>hannah@email.com</td>
-                            <td>2 TB</td>
-                            <td>1.2 TB</td>
-                            <td><button class="btn-view"><span class="material-icons" style="font-size:16px;">visibility</span> View</button></td>
-                        </tr>
-                        <tr>
-                            <td>mike.tech</td>
-                            <td>mike@email.com</td>
-                            <td>2 TB</td>
-                            <td>980 GB</td>
-                            <td><button class="btn-view"><span class="material-icons" style="font-size:16px;">visibility</span> View</button></td>
-                        </tr>
-                        <tr>
-                            <td>linda_biz</td>
-                            <td>linda@email.com</td>
-                            <td>200 GB</td>
-                            <td>198 GB</td>
-                            <td><button class="btn-view"><span class="material-icons" style="font-size:16px;">visibility</span> View</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </main>
+<body data-nav="admin">
+<a class="skip-link" href="#main">Skip to main content</a>
+<div data-shell-topbar></div>
+<div class="shell">
+  <aside data-shell-sidebar></aside>
+  <main class="main" id="main" data-shell-main>
+    <div class="page__head">
+      <div>
+        <h1 class="page__title">Storage Analysis</h1>
+        <p class="page__sub">Breakdown of stored bytes by bucket and plan.</p>
+      </div>
     </div>
+    <div id="alert" class="alert is-hidden" role="status" aria-live="polite"></div>
 
-    <script src="javascript/storage-analysis-1.js"></script>
+    <section class="section">
+      <div class="kv" id="storageKv">
+        <div class="kv__row"><div class="kv__key">Total stored</div><div class="kv__val" id="sTotal">—</div></div>
+        <div class="kv__row"><div class="kv__key">Average file size</div><div class="kv__val" id="sAvg">—</div></div>
+        <div class="kv__row"><div class="kv__key">Largest bucket</div><div class="kv__val" id="sLargest">—</div></div>
+      </div>
+      <div style="margin-top:var(--s-6)">
+        <div class="meter-row" id="sMeter1"><div class="meter-row__head"><span>Plan usage</span><span class="meter-row__val" id="sMeterVal">—</span></div><div class="meter"><div class="meter__fill" id="sMeterFill" style="width:0%"></div></div></div>
+      </div>
+      <div class="empty-state is-hidden" id="unwiredNotice"><h2>Not connected</h2><p>Storage endpoint not wired (404).</p></div>
+    </section>
+
+  </main>
+</div>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/shell.js"></script>
+<script src="javascript/storage-analysis-1.js"></script>
 </body>
 </html>

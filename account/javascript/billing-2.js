@@ -2,74 +2,48 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebas
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getFirestore, collection, getDocs, query, where, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-const firebaseConfig = {apiKey: "AIzaSyD7Ve_lk5waFwPNcQwHxM9DpYFkeEsQa74",authDomain: "bog-cloud.firebaseapp.com",projectId: "bog-cloud",storageBucket: "bog-cloud.appspot.com",messagingSenderId: "219071508992",appId: "1:219071508992:web:42516a44ed5d2f6a59dee5"};
-const app = initializeApp(firebaseConfig);
+/* Config comes from assets/js/config.js. */
+const app = initializeApp(window.BOG.config.firebase);
 const auth = getAuth(app);
 const db = getFirestore(app);
 let currentUser = null;
 
-// DARK MODE
-function updateThemeButton(){
-  const isDark = document.documentElement.classList.contains('dark');
-  document.getElementById('themeToggle').textContent = isDark? 'Light' : 'Dark';
+function wire() {
+  window.BOG.mountApp({ search: false });
+  document.querySelectorAll('.plan').forEach(function(card){
+    var btn = card.querySelector('.plan-select');
+    if (btn) btn.addEventListener('click', function(){ selectPlan(card, card.getAttribute('data-plan'), Number(card.getAttribute('data-price'))); });
+  });
 }
-function toggleTheme(){
-  document.documentElement.classList.toggle('dark');
-  localStorage.setItem('bog-theme', document.documentElement.classList.contains('dark')? 'dark' : 'light');
-  updateThemeButton();
-}
-document.getElementById('themeToggle').onclick = toggleTheme;
-updateThemeButton();
 
-function toggleSidebar() {document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open');if(window.innerWidth > 1024){document.getElementById('main').classList.toggle('shifted');}}
-window.toggleSidebar = toggleSidebar;
-window.toggleAccountMenu = () => {document.getElementById('accountMenu').classList.toggle('open');}
-window.logout = async () => { await signOut(auth); window.location.href = '/auth/login.html'; }
-
-window.selectPlan = async (element, plan, price) => {
+window.selectPlan = async function(element, plan, price) {
   if(!currentUser) return;
-
-  document.querySelectorAll('.plan').forEach(p => {
-    p.classList.remove('selected');
-    const btn = p.querySelector('button');
-    btn.className = 'btn-text';
-    btn.textContent = 'Upgrade';
+  document.querySelectorAll('.plan').forEach(function(p){
+    p.classList.remove('plan--current');
+    var btn = p.querySelector('button');
+    if (btn) { btn.className = 'btn btn--ghost plan-select'; btn.textContent = 'Upgrade'; }
   });
+  element.classList.add('plan--current');
+  var btn = element.querySelector('button');
+  if (btn) { btn.className = 'btn btn--primary plan-select'; btn.textContent = 'Selected'; }
+  var sum = document.getElementById('summaryText');
+  if (sum) sum.textContent = plan + ' - \u20A6' + price.toLocaleString('en-NG') + '/month';
+  try{
+    await addDoc(collection(db, "billing"), { uid: currentUser.uid, plan: plan, price: price, currency: "NGN", upgradedAt: serverTimestamp() });
+  }catch(e){}
+};
 
-  element.classList.add('selected');
-  const btn = element.querySelector('button');
-  btn.className = 'btn-primary';
-  btn.textContent = 'Selected';
-
-  // SHOW SUMMARY UNDERNEATH
-  document.getElementById('selectedSummary').classList.add('show');
-  document.getElementById('summaryText').textContent = `${plan} - ₦${price.toLocaleString()}/month`;
-
-  // SILENT SAVE
-  await addDoc(collection(db, "billing"), {
-    uid: currentUser.uid,
-    plan: plan,
-    price: price,
-    currency: "NGN",
-    upgradedAt: serverTimestamp()
-  });
-}
-
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, async function(user){
   if (user) {
     currentUser = user;
-    const firstName = user.displayName? user.displayName.split(' ')[0] : user.email.split('@')[0];
-    const initial = firstName[0].toUpperCase();
-    document.getElementById('userFirstName').textContent = firstName;
-    document.getElementById('userAvatar').textContent = initial;
-    document.getElementById('menuAvatar').textContent = initial;
-    document.getElementById('menuUserName').textContent = user.displayName || firstName;
-    document.getElementById('menuUserEmail').textContent = user.email;
-
-    const filesSnap = await getDocs(query(collection(db, "files"), where("uid", "==", user.uid)));
-    let totalSize = 0; filesSnap.forEach(d => totalSize += d.data().size || 0);
-    const gb = (totalSize / 1024 / 1024 / 1024).toFixed(2);
-    document.getElementById('storageUsed').textContent = gb + ' GB';
-    document.getElementById('storageBar').style.width = Math.min((gb / 50 * 100), 100) + '%';
+    wire();
+    // storage calc
+    try{
+      var filesSnap = await getDocs(query(collection(db, "files"), where("uid", "==", user.uid)));
+      var totalSize = 0; filesSnap.forEach(function(d){ totalSize += d.data().size || 0; });
+      var gb = (totalSize / 1024 / 1024 / 1024).toFixed(2);
+      var su = document.getElementById('storageUsed'); if (su) su.textContent = gb + ' GB';
+      var bar = document.getElementById('storageBar'); if (bar) { bar.style.width = Math.min((gb / 50 * 100), 100) + '%'; bar.setAttribute('aria-valuenow', String(Math.round(gb/50*100))); }
+    }catch(e){}
   } else { window.location.href = '/auth/login.html'; }
 });

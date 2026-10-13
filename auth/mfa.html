@@ -3,29 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Two-Factor Authentication - BOG Cloud</title>
-<link rel="stylesheet" href="css/mfa.css">
+<title>Two-factor authentication — BOG Cloud</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
 <body>
-  <div class="card">
-    <div class="logo-b">B</div>
-    <h2>Two-Factor Authentication</h2>
-    <p>Enter the 6-digit code we sent to <strong id="userEmail">your email</strong> to secure your account.</p>
-    
-    <div class="input-group">
-      <input id="otpCode" type="text" placeholder="000" maxlength="6" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+<a class="skip-link" href="#main">Skip to verification code</a>
+
+<div class="auth">
+  <main class="auth__main" id="main">
+    <a class="auth__brand" href="/index.html">
+      <img src="/assets/images/logo.PNG" alt="" width="40" height="40" decoding="async">
+      <span>BOG Cloud</span>
+    </a>
+
+    <div>
+      <h1 class="auth__title">Two-factor authentication</h1>
+      <p class="page__sub">
+        Enter the 6-digit code we sent to <strong id="userEmail">your email address</strong>.
+      </p>
     </div>
 
-    <button class="btn-brand" onclick="verifyMFA()">Verify & Continue</button>
-    <button class="btn-outline" onclick="resendCode()">Resend Code</button>
-    <div id="error" class="error-msg"></div>
-    
-    <div class="footer-link">
-      <a href="verify-otp.html" class="link" onclick="window.location.href='verify-otp.html'">Back</a>
-      <a href="/dashboard/dashboard.html" class="link" onclick="window.location.href='/dashboard/dashboard.html'">Skip for now</a>
-    </div>
-  </div>
+    <div id="error" class="alert" role="alert" aria-live="assertive"></div>
 
+    <form class="auth__form" id="mfaForm" method="post">
+      <div class="field">
+        <span class="field-label" id="otp-label">Verification code</span>
+        <!-- Six real inputs; the boxes are a skin over them. -->
+        <div class="otp" id="otpGroup" role="group" aria-labelledby="otp-label">
+          <input class="otp__cell" type="text" inputmode="numeric" maxlength="1"
+                 autocomplete="one-time-code" aria-label="Digit 1">
+          <input class="otp__cell" type="text" inputmode="numeric" maxlength="1"
+                 autocomplete="one-time-code" aria-label="Digit 2">
+          <input class="otp__cell" type="text" inputmode="numeric" maxlength="1"
+                 autocomplete="one-time-code" aria-label="Digit 3">
+          <input class="otp__cell" type="text" inputmode="numeric" maxlength="1"
+                 autocomplete="one-time-code" aria-label="Digit 4">
+          <input class="otp__cell" type="text" inputmode="numeric" maxlength="1"
+                 autocomplete="one-time-code" aria-label="Digit 5">
+          <input class="otp__cell" type="text" inputmode="numeric" maxlength="1"
+                 autocomplete="one-time-code" aria-label="Digit 6">
+        </div>
+        <p class="field-hint">Paste the whole code if you copied it from the email.</p>
+      </div>
+
+      <button type="submit" class="btn btn--primary btn--lg btn--block" id="verifyBtn">
+        Verify and continue
+      </button>
+
+      <button type="button" class="btn btn--ghost btn--block" id="resendBtn">Resend code</button>
+    </form>
+
+    <!--
+      Verification is not wired to a backend yet, so this step is closed
+      rather than faked. The previous version accepted any six digits and
+      offered "Skip for now", which made the control decorative. The button
+      below stays disabled until POST /api/v1/auth/mfa/verify exists.
+    -->
+    <div class="alert alert--warning is-visible" role="note">
+      Two-factor verification is not active on this deployment. It cannot be
+      completed until the verification endpoint ships.
+    </div>
+
+    <p class="auth__foot">
+      <a href="/auth/verify-otp.html">Back to email verification</a>
+    </p>
+  </main>
+
+  <aside class="auth__aside">
+    <p class="auth__note">Why this step exists</p>
+    <h2>A stolen password should not be enough.</h2>
+    <ul class="auth__list">
+      <li>A second factor stops a password reused from another site.</li>
+      <li>Codes expire, and each one can be used once.</li>
+      <li>You will be able to see every active session and revoke them here.</li>
+    </ul>
+  </aside>
+</div>
+
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/config.js"></script>
 <script type="module" src="javascript/mfa-1.js"></script>
 </body>
 </html>

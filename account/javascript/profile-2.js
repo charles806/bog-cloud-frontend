@@ -1,121 +1,124 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, updatePassword, updateProfile, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyD7Ve_lk5waFwPNcQwHxM9DpYFkeEsQa74",
-  authDomain: "bog-cloud.firebaseapp.com",
-  projectId: "bog-cloud",
-  storageBucket: "bog-cloud.appspot.com",
-  messagingSenderId: "219071508992",
-  appId: "1:219071508992:web:42516a44ed5d2f6a59dee5"
-};
-const app = initializeApp(firebaseConfig);
+/* Config comes from assets/js/config.js. */
+const app = initializeApp(window.BOG.config.firebase);
 const auth = getAuth(app);
 let currentUser = null;
 
-// DARK MODE
-function updateThemeButton(){
-  const isDark = document.documentElement.classList.contains('dark');
-  document.getElementById('themeToggle').textContent = isDark? 'Light' : 'Dark';
-}
-function toggleTheme(){
-  document.documentElement.classList.toggle('dark');
-  localStorage.setItem('bog-theme', document.documentElement.classList.contains('dark')? 'dark' : 'light');
-  updateThemeButton();
-}
-document.getElementById('themeToggle').onclick = toggleTheme;
-updateThemeButton();
+var BOGNS = window.BOG;
 
-function showAlert(message, type){
-  const box = document.getElementById('alertBox');
-  box.textContent = message;
-  box.className = `alert ${type}`;
-  box.style.display = 'block';
-  window.scrollTo(0,0);
-  setTimeout(() => box.style.display = 'none', 5000);
+function showAlert(message, kind) {
+  var el = document.getElementById('alertBox') || document.getElementById('alert');
+  if (el && BOGNS && BOGNS.alert) BOGNS.alert(el, message, kind || 'error');
+  else if (el) { el.textContent = message; el.className = 'alert alert--' + (kind||'error') + ' is-visible'; }
 }
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    currentUser = user;
-    const name = user.displayName || user.email.split('@')[0];
-    const initial = name[0].toUpperCase();
-
-    document.getElementById('profileAvatar').textContent = initial;
-    document.getElementById('profileName').textContent = name;
-    document.getElementById('profileEmail').textContent = user.email;
-    document.getElementById('displayName').textContent = name;
-    document.getElementById('displayEmail').textContent = user.email;
-    document.getElementById('newNameInput').value = name;
-  } else {
-    window.location.href = '/auth/login.html';
+function toggleNameForm() {
+  var f = document.getElementById('nameForm');
+  if (!f) return;
+  f.classList.toggle('is-hidden');
+  if (!f.classList.contains('is-hidden')) document.getElementById('newNameInput').focus();
+}
+function togglePasswordForm() {
+  var f = document.getElementById('passwordForm');
+  if (!f) return;
+  var isHidden = f.classList.toggle('is-hidden');
+  // toggle via is-hidden: if it was hidden, now visible => clear
+  if (!f.classList.contains('is-hidden')) {
+    var a=document.getElementById('currentPassword'); if(a) a.value='';
+    var b=document.getElementById('newPassword'); if(b) b.value='';
+    var c=document.getElementById('confirmPassword'); if(c) c.value='';
+    document.getElementById('currentPassword').focus();
   }
-});
+}
 
-window.logout = async () => {
-  await signOut(auth);
+function wire() {
+  BOGNS.mountApp({ search: false });
+  var t1 = document.getElementById('toggleNameBtn');
+  if (t1) t1.addEventListener('click', toggleNameForm);
+  var c1 = document.getElementById('cancelNameBtn');
+  if (c1) c1.addEventListener('click', toggleNameForm);
+  var t2 = document.getElementById('togglePasswordBtn');
+  if (t2) t2.addEventListener('click', togglePasswordForm);
+  var c2 = document.getElementById('cancelPasswordBtn');
+  if (c2) c2.addEventListener('click', togglePasswordForm);
+  var sb = document.getElementById('saveNameBtn');
+  if (sb) sb.addEventListener('click', saveName);
+  var ub = document.getElementById('updatePassBtn');
+  if (ub) ub.addEventListener('click', savePassword);
+  var sOut = document.getElementById('signOutBtn');
+  if (sOut) sOut.addEventListener('click', logout);
+}
+
+async function logout() {
+  try { await signOut(auth); } catch(e) {}
+  BOGNS.auth.signOut();
   window.location.href = '/index.html';
 }
 
-window.toggleNameForm = () => {
-  document.getElementById('nameForm').classList.toggle('open');
-}
-
-window.saveName = async () => {
-  const btn = document.getElementById('saveNameBtn');
-  const newName = document.getElementById('newNameInput').value.trim();
+async function saveName() {
+  var btn = document.getElementById('saveNameBtn');
+  var newName = (document.getElementById('newNameInput').value || '').trim();
   if(!newName) { showAlert("Name cannot be empty", "error"); return; }
-
-  btn.disabled = true; btn.textContent = "Saving...";
+  BOGNS.busy(btn, true, "Saving…");
   try{
     await updateProfile(currentUser, { displayName: newName });
+    try{ localStorage.setItem('bog_user', JSON.stringify(Object.assign({}, JSON.parse(localStorage.getItem('bog_user')||'{}'), {displayName:newName, name:newName}))); }catch(e){}
     showAlert("Name updated successfully!", "success");
     toggleNameForm();
-    document.getElementById('profileName').textContent = newName;
-    document.getElementById('displayName').textContent = newName;
-    document.getElementById('profileAvatar').textContent = newName[0].toUpperCase();
+    var pn=document.getElementById('profileName'); if(pn) pn.textContent = newName;
+    var dn=document.getElementById('displayName'); if(dn) dn.textContent = newName;
+    var av=document.getElementById('profileAvatar'); if(av) av.textContent = newName[0].toUpperCase();
+    BOGNS.mountApp({ search:false });
   } catch(error){
     showAlert("Error: " + error.message, "error");
   }
-  btn.disabled = false; btn.textContent = "Save Name";
+  BOGNS.busy(btn, false);
 }
 
-window.togglePasswordForm = () => {
-  document.getElementById('passwordForm').classList.toggle('open');
-  document.getElementById('currentPassword').value = '';
-  document.getElementById('newPassword').value = '';
-  document.getElementById('confirmPassword').value = '';
-}
-
-window.savePassword = async () => {
-  const btn = document.getElementById('updatePassBtn');
-  const currentPass = document.getElementById('currentPassword').value;
-  const newPass = document.getElementById('newPassword').value;
-  const confirmPass = document.getElementById('confirmPassword').value;
-
+async function savePassword() {
+  var btn = document.getElementById('updatePassBtn');
+  var currentPass = document.getElementById('currentPassword').value;
+  var newPass = document.getElementById('newPassword').value;
+  var confirmPass = document.getElementById('confirmPassword').value;
   if(!currentPass){ showAlert("Please enter current password", "error"); return; }
-  if(!newPass || newPass.length < 6){
-    showAlert("New password must be at least 6 characters", "error");
-    return;
-  }
-  if(newPass!== confirmPass){
-    showAlert("New passwords do not match", "error");
-    return;
-  }
-
-  btn.disabled = true; btn.textContent = "Updating...";
+  if(!newPass || newPass.length < 6){ showAlert("New password must be at least 6 characters", "error"); return; }
+  if(newPass!== confirmPass){ showAlert("New passwords do not match", "error"); return; }
+  BOGNS.busy(btn, true, "Updating…");
   try{
-    const credential = EmailAuthProvider.credential(currentUser.email, currentPass);
+    var credential = EmailAuthProvider.credential(currentUser.email, currentPass);
     await reauthenticateWithCredential(currentUser, credential);
     await updatePassword(currentUser, newPass);
     showAlert("Password updated successfully!", "success");
     togglePasswordForm();
   } catch(error){
-    if(error.code === 'auth/wrong-password'){
-      showAlert("Current password is incorrect", "error");
-    } else {
-      showAlert("Error: " + error.message, "error");
-    }
+    if(error.code === 'auth/wrong-password') showAlert("Current password is incorrect", "error");
+    else showAlert("Error: " + error.message, "error");
   }
-  btn.disabled = false; btn.textContent = "Update Password";
+  BOGNS.busy(btn, false);
 }
+
+// expose for legacy onclick if cached
+window.toggleNameForm = toggleNameForm;
+window.togglePasswordForm = togglePasswordForm;
+window.saveName = saveName;
+window.savePassword = savePassword;
+window.logout = logout;
+
+onAuthStateChanged(auth, function(user){
+  if (user) {
+    currentUser = user;
+    wire();
+    var name = user.displayName || user.email.split('@')[0];
+    var initial = name[0].toUpperCase();
+    var av=document.getElementById('profileAvatar'); if(av) av.textContent = initial;
+    var pn=document.getElementById('profileName'); if(pn) pn.textContent = name;
+    var pe=document.getElementById('profileEmail'); if(pe) pe.textContent = user.email;
+    var dn=document.getElementById('displayName'); if(dn) dn.textContent = name;
+    var de=document.getElementById('displayEmail'); if(de) de.textContent = user.email;
+    var ni=document.getElementById('newNameInput'); if(ni) ni.value = name;
+  } else {
+    window.location.href = '/auth/login.html';
+  }
+});

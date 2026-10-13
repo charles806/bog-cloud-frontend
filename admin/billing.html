@@ -1,128 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOG Cloud - Admin Billing</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <link rel="stylesheet" href="css/billing.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Billing — BOG Cloud</title>
+<meta name="description" content="Revenue and plan distribution. Not connected until the billing endpoint exists.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
-<body>
-
-    <header class="navbar">
-        <div class="nav-left">
-            <button class="hamburger" id="hamburger-btn"><span class="material-icons">menu</span></button>
-            <img src=" /images/logo.jpeg" alt="BOG Cloud Logo" class="logo"> 
-            <h1>BOG Cloud</h1>
-        </div>
-        <div class="nav-right">
-            <button class="theme-toggle" id="theme-toggle"><span class="material-icons" id="theme-icon">dark_mode</span></button>
-            <div class="user-avatar">A</div>
-        </div>
-    </header>
-
-    <div class="overlay" id="overlay"></div>
-
-    <div class="container">
-        <aside class="sidebar" id="sidebar">
-            <ul id="sidebar-menu"></ul>
-        </aside>
-
-        <main class="main-content">
-            <h2>Billing & Revenue</h2>
-            <p>Manage subscriptions and track revenue</p>
-
-            <!-- REVENUE STATS -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="label">Monthly Revenue</div>
-                    <div class="value">₦12,430,000</div>
-                    <div class="change green">+18.2% this month</div>
-                </div>
-                <div class="stat-card">
-                    <div class="label">Active Subscribers</div>
-                    <div class="value">1,024</div>
-                    <div class="change green">+12.5% this month</div>
-                </div>
-                <div class="stat-card">
-                    <div class="label">Pending Payments</div>
-                    <div class="value">₦340,000</div>
-                    <div class="change red">-3.1% this month</div>
-                </div>
-            </div>
-
-            <!-- PLANS OVERVIEW - Same style as user billing -->
-            <div class="card">
-                <h3>Storage Plans Overview</h3>
-                <div class="plans-grid">
-                    <div class="plan-card">
-                        <div class="plan-info">
-                            <div class="title">100 GB</div>
-                            <div class="price">₦1,500 / month</div>
-                        </div>
-                        <button class="btn btn-outline">View Users</button>
-                    </div>
-                    <div class="plan-card">
-                        <div class="plan-info">
-                            <div class="title">200 GB</div>
-                            <div class="price">₦3,000 / month</div>
-                        </div>
-                        <button class="btn btn-outline">View Users</button>
-                    </div>
-                    <div class="plan-card selected">
-                        <div class="plan-info">
-                            <div class="title">2 TB</div>
-                            <div class="price">₦7,500 / month</div>
-                        </div>
-                        <button class="btn btn-primary">Top Plan</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RECENT TRANSACTIONS -->
-            <div class="card">
-                <h3>Recent Transactions</h3>
-                <table class="billing-table">
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Plan</th>
-                            <th>Amount</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>hannaho21</td>
-                            <td>2 TB</td>
-                            <td>₦7,500</td>
-                            <td>Aug 24, 2026</td>
-                            <td><span class="badge paid">Paid</span></td>
-                        </tr>
-                        <tr>
-                            <td>john.doe</td>
-                            <td>200 GB</td>
-                            <td>₦3,000</td>
-                            <td>Aug 23, 2026</td>
-                            <td><span class="badge paid">Paid</span></td>
-                        </tr>
-                        <tr>
-                            <td>sarah_k</td>
-                            <td>100 GB</td>
-                            <td>₦1,500</td>
-                            <td>Aug 23, 2026</td>
-                            <td><span class="badge pending">Pending</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </main>
+<body data-nav="admin">
+<a class="skip-link" href="#main">Skip to main content</a>
+<div data-shell-topbar></div>
+<div class="shell">
+  <aside data-shell-sidebar></aside>
+  <main class="main" id="main" data-shell-main>
+    <div class="page__head">
+      <div>
+        <h1 class="page__title">Billing</h1>
+        <p class="page__sub">Revenue and plan distribution. Not connected until the billing endpoint exists.</p>
+      </div>
     </div>
+    <div id="alert" class="alert is-hidden" role="status" aria-live="polite"></div>
 
-    <script src="javascript/billing-1.js"></script>
+    <section class="section">
+      <div class="stat-grid stat-grid--dense">
+        <div class="stat stat--dense"><div class="stat__label">Monthly revenue</div><div class="stat__value" id="bRevenue">—</div><div class="stat__context">This month</div></div>
+        <div class="stat stat--dense"><div class="stat__label">Paying users</div><div class="stat__value" id="bPaying">—</div><div class="stat__context" id="bPayingCtx"></div></div>
+        <div class="stat stat--dense"><div class="stat__label">Free users</div><div class="stat__value" id="bFree">—</div><div class="stat__context" id="bFreeCtx"></div></div>
+      </div>
+      <div class="empty-state is-hidden" id="unwiredNotice"><h2>Not connected</h2><p>Billing endpoint not wired (404).</p></div>
+    </section>
+
+  </main>
+</div>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/shell.js"></script>
+<script src="javascript/billing-1.js"></script>
 </body>
 </html>

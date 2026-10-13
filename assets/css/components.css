@@ -44,7 +44,7 @@
 .btn--primary:hover { background: var(--brand-900); }
 
 /* Flag — the highlighter. Used for the single loudest action on a view. */
-.btn--flag { background: var(--flag); color: var(--on-fill); }
+.btn--flag { background: var(--flag); color: var(--on-fill); border-color: var(--fill-edge); }
 .btn--flag:hover { background: #E8BE24; }
 
 /* Ink — inverted, for use on signal fills. */
@@ -62,6 +62,7 @@
 
 .btn--lg { padding: 16px var(--s-6); font-size: var(--fs-body); box-shadow: var(--sh-3); }
 .btn--sm { padding: 8px var(--s-3); font-size: var(--fs-xs); box-shadow: var(--sh-1); }
+.btn--block { display: flex; width: 100%; }
 
 /* Disabled — visible, and readable. The old .btn-brand:disabled was white
    text on #ccc (1.61:1), i.e. invisible in its most important state. */
@@ -98,9 +99,9 @@
 .card--link:active { transform: translate(3px, 3px); box-shadow: var(--sh-1); }
 
 /* Filled card — loud background, structure contains the energy. */
-.card--fill-flag  { background: var(--flag);  color: var(--on-fill); }
-.card--fill-sky   { background: var(--sky);   color: var(--on-fill); }
-.card--fill-live  { background: var(--live);  color: var(--on-fill); }
+.card--fill-flag  { background: var(--flag);  color: var(--on-fill); border-color: var(--fill-edge); }
+.card--fill-sky   { background: var(--sky);   color: var(--on-fill); border-color: var(--fill-edge); }
+.card--fill-live  { background: var(--live);  color: var(--on-fill); border-color: var(--fill-edge); }
 
 /* ==========================================================================
    BADGE / PILL
@@ -113,7 +114,7 @@
   align-items: center;
   gap: var(--s-1);
   padding: 4px var(--s-2);
-  border: var(--bw-thin) solid var(--edge);
+  border: var(--bw-thin) solid var(--fill-edge);
   border-radius: var(--radius);
   background: var(--flag);
   color: var(--on-fill);
@@ -225,7 +226,7 @@
   color: var(--text);
   cursor: pointer;
 }
-.reveal-btn:hover { background: var(--flag); color: var(--on-fill); }
+.reveal-btn:hover { background: var(--flag); color: var(--on-fill); border-color: var(--fill-edge); }
 .reveal-btn svg { width: 18px; height: 18px; }
 
 /* ==========================================================================
@@ -276,8 +277,16 @@
   border-right: var(--bw-thin) solid var(--edge);
   transition: width 220ms var(--ease);
 }
-.progress--flag .progress-bar { background: var(--flag); }
-.progress--live .progress-bar { background: var(--live); }
+/* These two variants invert the track instead of tinting it. --flag and --live
+   cannot clear 3:1 against the --bg track (1.51:1 and 1.42:1), and a progress
+   fill boundary is meaningful UI, not decoration. Putting a dark track behind
+   the fill gives 13.7:1 and 11.2:1. */
+.progress--flag { background: var(--ink); }
+.progress--live { background: var(--ink); }
+.progress--flag .progress-bar { background: var(--flag);  border-right-color: var(--fill-edge); }
+.progress--live .progress-bar { background: var(--live);  border-right-color: var(--fill-edge); }
+:root[data-theme="dark"] .progress--flag,
+:root[data-theme="dark"] .progress--live { background: var(--paper); }
 
 /* ==========================================================================
    TABLE
@@ -392,7 +401,7 @@
   cursor: pointer;
   transition: transform var(--t-lift) var(--ease), box-shadow var(--t-lift) var(--ease);
 }
-.icon-btn:hover { transform: translate(-2px, -2px); box-shadow: var(--sh-2); background: var(--flag); color: var(--on-fill); }
+.icon-btn:hover { transform: translate(-2px, -2px); box-shadow: var(--sh-2); background: var(--flag); color: var(--on-fill); border-color: var(--fill-edge); }
 .icon-btn:active { transform: translate(2px, 2px); box-shadow: none; }
 .icon-btn svg { width: 20px; height: 20px; }
 .icon-btn--plain { border: 0; box-shadow: none; background: transparent; }
@@ -447,6 +456,16 @@
 .menu__item--danger { color: var(--err-text); font-weight: 600; }
 .menu__item--danger:hover { background: var(--err-bg); color: var(--err-text); }
 
+/* Anchor wrapper for a menu trigger. Exists so the shell can compose the
+   account menu without emitting an inline style string. */
+.menu-anchor { position: relative; display: flex; }
+.menu-anchor__name { font-weight: 700; font-size: var(--fs-sm); }
+.menu-anchor__email { font-size: var(--fs-xs); color: var(--muted); }
+
+/* Visibility toggle used by JS. Preferred over style.display so the rules
+   stay in the stylesheet and stay overridable. */
+.is-hidden { display: none !important; }
+
 /* Sidebar / drawer */
 .shell { display: flex; align-items: flex-start; }
 
@@ -492,7 +511,7 @@
 /* shell.js sets aria-current="page"; this is the visual match. */
 .nav-link[aria-current="page"] {
   background: var(--flag);
-  border-color: var(--edge);
+  border-color: var(--fill-edge);
   box-shadow: var(--sh-1);
   font-weight: 700;
 }
@@ -559,7 +578,7 @@ body.is-locked { overflow: hidden; }
   display: grid;
   place-items: center;
   width: 56px; height: 56px;
-  border: var(--bw) solid var(--edge);
+  border: var(--bw) solid var(--fill-edge);
   box-shadow: var(--sh-2);
   background: var(--flag);
   color: var(--on-fill);

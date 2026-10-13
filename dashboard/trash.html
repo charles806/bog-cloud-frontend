@@ -3,26 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trash - BOG Cloud</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/trash.css">
+<title>Trash — BOG Cloud</title>
+<meta name="description" content="Files you deleted. Restore or delete them permanently.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/images/logo.PNG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-boot.js"></script>
 </head>
-<body>
+<body data-nav="app">
+<a class="skip-link" href="#main">Skip to main content</a>
+<div data-shell-topbar></div>
+<div class="shell">
+  <aside data-shell-sidebar></aside>
+  <main class="main" id="main" data-shell-main>
+    <div class="page__head">
+      <div>
+        <h1 class="page__title">Trash</h1>
+        <p class="page__sub">Files you deleted. Restore or delete them permanently.</p>
+      </div>
+    </div>
+    <div id="alert" class="alert is-hidden" role="status" aria-live="polite"></div>
 
-<div class="trash-container">
-  <div class="trash-header">
-    <h1>Trash</h1>
-    <button class="btn btn-empty" onclick="emptyTrash()">Empty Trash</button>
-  </div>
-  <div id="trashContent">
-    <table class="trash-table">
-      <thead><tr><th>Name</th><th>Deleted</th><th>Actions</th></tr></thead>
-      <tbody id="trashList"></tbody>
-    </table>
-    <div class="empty-state" id="emptyState" style="display:none;">Trash is empty</div>
-  </div>
+    <section class="section">
+      <div class="section__head">
+        <h2 class="section__title">Deleted files</h2>
+        <span class="result-count" id="trashCount"></span>
+      </div>
+      <div class="cluster cluster--end" style="margin-bottom:var(--s-3)">
+        <button class="btn btn--danger" type="button" id="emptyTrashBtn">Empty Trash</button>
+      </div>
+      <div class="table-scroll">
+        <table class="table table--dense">
+          <caption class="sr-only">Files in trash</caption>
+          <thead>
+            <tr><th scope="col">Name</th><th scope="col">Deleted</th><th scope="col"><span class="sr-only">Actions</span></th></tr>
+          </thead>
+          <tbody id="trashList"></tbody>
+        </table>
+      </div>
+      <div class="empty-state is-hidden" id="emptyState">
+        <div class="empty-state__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></div>
+        <h3>Trash is empty</h3>
+        <p>Files you delete stay here for 30 days.</p>
+      </div>
+    </section>
+
+  </main>
 </div>
-
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/forms.js"></script>
+<script src="/assets/js/shell.js"></script>
 <script type="module" src="javascript/trash-1.js"></script>
 </body>
 </html>

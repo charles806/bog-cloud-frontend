@@ -58,8 +58,37 @@
     }
   ];
 
+  /* The admin family had its own JS-generated nav (a <ul> built from a template
+     string inside admin-dashboard-1.js, with TEMP ADMIN MODE hardcoded above
+     it). It is now a second entry in the same config as everything else. */
+  var NAV_ADMIN = [
+    {
+      label: 'Overview',
+      items: [
+        { href: '/admin/admin-dashboard.html', label: 'Dashboard',  icon: 'grid' },
+        { href: '/admin/analytics.html',      label: 'Analytics',  icon: 'chart' }
+      ]
+    },
+    {
+      label: 'People',
+      items: [
+        { href: '/admin/users.html',       label: 'Users',        icon: 'user' },
+        { href: '/admin/manage-users.html', label: 'Manage users', icon: 'user' }
+      ]
+    },
+    {
+      label: 'Platform',
+      items: [
+        { href: '/admin/storage-analysis.html', label: 'Storage analysis', icon: 'chart' },
+        { href: '/admin/billing.html',          label: 'Billing',          icon: 'card' }
+      ]
+    }
+  ];
+
   var ICONS = {
     folder:  '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>',
+    grid:    '<path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/>',
+    chart:   '<path d="M4 20V10h4v10H4zm6 0V4h4v16h-4zm6 0v-7h4v7h-4z"/>',
     shield:  '<path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3zm-1 13-3.5-3.5 1.4-1.4L11 12.2l4.7-4.7 1.4 1.4L11 15z"/>',
     trash:   '<path d="M7 4V3h10v1h4v2H3V4h4zm-2 4h14l-1 13H6L5 8z"/>',
     key:     '<path d="M14 2a6 6 0 0 0-5.7 8L2 16.3V22h5.7l1.4-1.4v-2h2v-2h2l1.6-1.6A6 6 0 1 0 14 2zm2 5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>',
@@ -262,9 +291,10 @@
     if (!mountTop || !mountSide) return null;
 
     var path = global.location.pathname;
+    var nav = opts.nav === 'admin' ? NAV_ADMIN : NAV;
 
     /* --- sidebar ---------------------------------------------------- */
-    var groups = NAV.map(function (group) {
+    var groups = nav.map(function (group) {
       var items = group.items.map(function (item) {
         var current = path === item.href;
         return '<a class="nav-link" href="' + esc(item.href) + '"' +
@@ -281,8 +311,8 @@
         'aria-label="Close navigation">' + icon('close') + '</button>' +
       groups +
       '<div class="sidebar__group">' +
-        '<button type="button" class="btn btn--primary" style="width:100%">' +
-          icon('upload') + '<span>New upload</span></button>' +
+        '<a class="btn btn--ghost btn--block" href="/auth/login.html" data-signout>' +
+          icon('lock') + '<span>Sign out</span></a>' +
       '</div>';
 
     /* --- topbar ----------------------------------------------------- */
@@ -301,14 +331,14 @@
     if (user) {
       var initial = esc(user.initial || (user.name || '?').charAt(0));
       userHtml =
-        '<div style="position:relative;display:flex">' +
+        '<div class="menu-anchor">' +
           '<button type="button" class="avatar" id="shell-avatar" ' +
             'aria-haspopup="menu" aria-expanded="false" aria-controls="shell-menu" ' +
             'aria-label="Account menu">' + initial + '</button>' +
           '<div class="menu" id="shell-menu" role="menu" hidden>' +
             '<div class="menu__header">' +
-              '<div style="font-weight:700;font-size:var(--fs-sm)">' + esc(user.name || '') + '</div>' +
-              '<div style="font-size:var(--fs-xs);color:var(--muted)">' + esc(user.email || '') + '</div>' +
+              '<div class="menu-anchor__name">' + esc(user.name || '') + '</div>' +
+              '<div class="menu-anchor__email">' + esc(user.email || '') + '</div>' +
             '</div>' +
             '<a class="menu__item" role="menuitem" href="/account/profile.html">Account settings</a>' +
             '<a class="menu__item" role="menuitem" href="/dashboard/dashboard.html">Go to drive</a>' +
@@ -319,11 +349,14 @@
     }
 
     mountTop.innerHTML =
-      '<button type="button" class="icon-btn icon-btn--plain" id="shell-drawer" ' +
-        'aria-expanded="false" aria-controls="shell-sidebar" aria-label="Open navigation" ' +
-        'style="display:none">' + icon('menu') + '</button>' +
+      '<button type="button" class="icon-btn icon-btn--plain is-hidden" id="shell-drawer" ' +
+        'aria-expanded="false" aria-controls="shell-sidebar" aria-label="Open navigation">' +
+        icon('menu') + '</button>' +
       '<a class="topbar__brand" href="/index.html">' +
-        '<img class="topbar__mark" src="/images/logo.jpeg" alt="" width="34" height="34">' +
+        /* assets/images/logo.PNG is 33KB. images/logo.jpeg is 2.1MB and was
+           loaded by 13 pages — 28MB across the site for one wordmark. */
+        '<img class="topbar__mark" src="/assets/images/logo.PNG" alt="" width="34" height="34" ' +
+          'decoding="async">' +
         '<span>BOG Cloud</span></a>' +
       '<div class="topbar__spacer"></div>' + searchHtml + themeBtn + userHtml;
 
@@ -354,7 +387,7 @@
     function syncToggle() {
       if (!drawerToggle) return;
       var isDrawer = global.innerWidth <= DRAWER_BP;
-      drawerToggle.style.display = isDrawer ? 'inline-grid' : 'none';
+      drawerToggle.classList.toggle('is-hidden', !isDrawer);
       drawerToggle.setAttribute('aria-expanded', 'false');
     }
     syncToggle();
@@ -391,6 +424,86 @@
      re-implementing focus management a second time. */
   BOG.a11y = { trap: trap, focusables: focusables };
   BOG.createMenu = createMenu;
+  BOG.auth = { readToken: readToken, readUser: readUser, signOut: signOut };
+
+  /* ======================================================================
+     AUTH STATE + APP BOOTSTRAP
+     Every app page declares the same three mount points and calls mountApp().
+     ====================================================================== */
+
+  function readToken() {
+    /* Two keys exist across the codebase: auth/javascript/login-1.js writes
+       'token', the older index-1.js read 'bog_token'. Check both so the
+       session is not silently lost on a page that used the other key. */
+    try { return localStorage.getItem('token') || localStorage.getItem('bog_token'); }
+    catch (e) { return null; }
+  }
+
+  function readUser() {
+    try {
+      var raw = localStorage.getItem('bog_user') || localStorage.getItem('user');
+      if (!raw) return null;
+      var u = JSON.parse(raw);
+      return (u && (u.name || u.email)) ? u : null;
+    } catch (e) { return null; }
+  }
+
+  /* Replaces `const isAdmin = true`, which was hardcoded in six admin files
+     and meant the admin pages rendered for anyone who could reach the URL.
+     The role is read from the stored session; with no session the answer is
+     "not an admin" rather than "yes". */
+  BOG.isAdmin = function () {
+    var u = readUser();
+    return !!(u && (u.isAdmin === true || u.role === 'admin'));
+  };
+
+  function signOut() {
+    try {
+      localStorage.removeItem('token');
+      localStorage.removeItem('bog_token');
+    } catch (e) {}
+  }
+
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest('[data-signout]');
+    if (!link) return;
+    e.preventDefault();
+    signOut();
+    global.location.href = link.getAttribute('href') || '/auth/login.html';
+  });
+
+  /* Called by every signed-in page. Reads nav family off <body data-nav>. */
+  BOG.mountApp = function (opts) {
+    opts = opts || {};
+    var isAdminPage = document.body.getAttribute('data-nav') === 'admin';
+
+    if (isAdminPage && !BOG.isAdmin()) {
+      /* No redirect loop: render the 403 in place so the user can see why. */
+      var gate = document.querySelector('[data-shell-main]');
+      if (gate) {
+        gate.innerHTML =
+          '<div class="error-page__inner" role="alert">' +
+            '<h1 class="page__title">Access denied</h1>' +
+            '<p class="page__sub">This area is restricted to BOG Cloud ' +
+              'administrators. If you believe that is wrong, sign in with an ' +
+              'administrator account.</p>' +
+            '<div class="cluster"><a class="btn btn--primary" href="/dashboard/dashboard.html">' +
+              'Back to my drive</a>' +
+              '<a class="btn btn--ghost" href="/auth/login.html">Sign in</a></div>' +
+          '</div>';
+      }
+      return null;
+    }
+
+    var user = readUser();
+    if (!user) user = opts.user || null;
+
+    return BOG.renderShell({
+      user: user,
+      search: opts.search !== false,
+      nav: isAdminPage ? 'admin' : 'app'
+    });
+  };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () { BOG.theme.boot(); });
