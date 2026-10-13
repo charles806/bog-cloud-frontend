@@ -1,15 +1,16 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDoc, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+/* ==========================================================================
+   BOG CLOUD — VAULT ENTRY (add / edit)
 
-const C = window.BOG.config;
-const BOG = window.BOG;
-const app = initializeApp(C.firebase);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const params = new URLSearchParams(window.location.search);
-const editId = params.get('id');
-let currentUser = null;
+   Backed by the Express backend (/api/v1/vault/entries) instead of Firestore.
+   The backend has no dedicated "type" column, so the select value round-trips
+   through the entry's tags (one tag, "Password" | "Note" | "Card").
+   ========================================================================== */
+
+var C = window.BOG.config;
+var BOG = window.BOG;
+
+var params = new URLSearchParams(window.location.search);
+var editId = params.get('id');
 
 var el = {
   alert: document.getElementById('alert'),
@@ -47,23 +48,24 @@ function escUrl(u){
 async function loadEntry(id){
   if (el.formTitle) el.formTitle.textContent = "Edit Vault Entry";
   try{
-    var snap = await getDoc(doc(db, "vault", id));
-    if (!snap.exists()) { BOG.alert(el.alert, 'Entry not found.', 'error'); return; }
-    var data = snap.data();
-    if (el.type) el.type.value = data.type || data.site || 'Password';
-    if (el.title) el.title.value = data.title || data.site || '';
-    if (el.username) el.username.value = data.username || data.email || '';
-    if (el.password) el.password.value = data.password || '';
-    if (el.url) el.url.value = data.url || '';
+    var res = await C.request(C.url('vaultEntry', { id: id }));
+    var entry = (res && (res.entry || res.data)) || {};
+    var tags = entry.tags || [];
+    if (el.type) el.type.value = tags.indexOf('Password') !== -1 ? 'Password'
+                               : tags.indexOf('Note') !== -1 ? 'Note'
+                               : tags.indexOf('Card') !== -1 ? 'Card'
+                               : (entry.type || 'Password');
+    if (el.title) el.title.value = entry.siteName || entry.title || entry.site || '';
+    if (el.username) el.username.value = entry.username || entry.email || '';
+    if (el.password) el.password.value = entry.password || '';
+    if (el.url) el.url.value = entry.url || '';
   }catch(err){
     BOG.alert(el.alert, err.message || 'Could not load entry.', 'error');
   }
 }
 
 async function saveEntry(){
-  if (!currentUser) return;
   var titleVal = (el.title.value || '').trim();
-  // title is required for new shape, site is alias
   if (!titleVal){
     if (BOG.setFieldError) BOG.setFieldError(el.title, 'Enter a title');
     return;
@@ -76,21 +78,20 @@ async function saveEntry(){
     return;
   }
   BOG.busy(el.saveBtn, true, 'Saving…');
+  var typeVal = el.type ? (el.type.value || 'Password') : 'Password';
   var data = {
-    userId: currentUser.uid,
-    uid: currentUser.uid,
-    type: el.type.value || 'Password',
-    title: titleVal,
-    site: titleVal,
-    username: el.username.value.trim(),
-    email: el.username.value.trim(),
+    siteName: titleVal,
+    username: (el.username.value || '').trim(),
     password: el.password.value,
     url: safe,
-    updatedAt: serverTimestamp()
+    tags: [typeVal]
   };
   try{
-    if (editId){ await updateDoc(doc(db, "vault", editId), data); }
-    else { await addDoc(collection(db, "vault"), Object.assign({}, data, { createdAt: serverTimestamp()})); }
+    if (editId){
+      await C.request(C.url('vaultEntry', { id: editId }), { method: 'PUT', body: data });
+    } else {
+      await C.request(C.url('vaultEntries'), { method: 'POST', body: data });
+    }
     window.location.href = 'vault.html';
   }catch(err){
     BOG.alert(el.alert, err.message || 'Could not save.', 'error');
@@ -101,16 +102,17 @@ async function saveEntry(){
 // keep alias for old inline handler if cached
 window.saveEntry = saveEntry;
 
-onAuthStateChanged(auth, function(user){
-  if (user){
-    currentUser = user;
-    start();
-    if (editId) loadEntry(editId);
-  } else if (window.BOG && window.BOG.auth && window.BOG.auth.readToken()) {
-    window.BOG.mountApp({ search: false });
-    var al = document.getElementById('alert');
-    if (al) window.BOG.alert(al, 'You are signed in, but this section needs a Firebase session to load your stored data yet.', 'warning');
-  } else {
+function startIfReady(){
+  if (!C.token()) {
     window.location.href = '/auth/login.html';
+    return;
   }
-});
+  start();
+  if (editId) loadEntry(editId);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', startIfReady);
+} else {
+  startIfReady();
+}

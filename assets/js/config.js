@@ -52,7 +52,15 @@
       mfaVerify:  '/auth/mfa/verify',
       files:      '/storage/files',
       fileUpload: '/storage/upload',
-      stats:      '/storage/stats'
+      stats:      '/storage/stats',
+      vaultEntries: '/vault/entries',
+      vaultEntry:   '/vault/entries/:id',
+      vaultFolders: '/vault/folders',
+      profile:      '/users/me',
+      changePassword: '/users/me/password',
+      devices:      '/users/devices',
+      revokeAllDevices: '/users/devices/all',
+      revokeDevice: '/users/devices/:deviceId'
     },
 
     /* ------------------------------------------------------------------

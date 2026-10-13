@@ -1,30 +1,21 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+/* Devices page backed by the Express backend: GET /users/devices and
+   DELETE /users/devices/:deviceId. Row shape: { deviceId, deviceName, lastActive }. */
 
-/* Config comes from assets/js/config.js. */
-const app = initializeApp(window.BOG.config.firebase);
-const auth = getAuth(app);
-const db = getFirestore(app);
-let currentUser = null;
+var C = window.BOG.config;
+var BOG = window.BOG;
 
-function esc(s){ return window.BOG.config.esc(String(s==null?'':s)); }
+function esc(s){ return C.esc(String(s==null?'':s)); }
 
-onAuthStateChanged(auth, async function(user){
-  if (user) {
-    currentUser = user;
-    window.BOG.mountApp({ search: false });
-    loadDevices();
-  } else if (window.BOG.auth && window.BOG.auth.readToken()) {
-    window.BOG.mountApp({ search: false });
-    var empty = document.getElementById('devicesEmpty');
-    var count = document.getElementById('devicesCount');
-    if (empty) empty.classList.remove('is-hidden');
-    if (count) count.textContent = '—';
-    var al = document.getElementById('alert');
-    if (al) window.BOG.alert(al, 'You are signed in, but this section needs a Firebase session to read your devices.', 'warning');
-  } else { window.location.href = '/auth/login.html'; }
-});
+function wire() {
+  var list = document.getElementById('devicesList');
+  if (list) {
+    list.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-revoke]');
+      if (!btn) return;
+      revokeDevice(btn.getAttribute('data-revoke'), btn.getAttribute('data-name'));
+    });
+  }
+}
 
 async function loadDevices(){
   var list = document.getElementById('devicesList');
@@ -33,20 +24,20 @@ async function loadDevices(){
   if (!list) return;
   list.textContent = '';
   try{
-    var snap = await getDocs(query(collection(db, "devices"), where("uid", "==", currentUser.uid)));
-    var docs = [];
-    snap.forEach(function(d){ docs.push(d.data()); });
-    if (!docs.length){
+    var data = await C.expressFetch('devices');
+    var devices = (data && (data.devices)) || [];
+    if (!Array.isArray(devices)) devices = [];
+    if (!devices.length){
       if (empty) empty.classList.remove('is-hidden');
       if (count) count.textContent = '0 devices';
       return;
     }
     if (empty) empty.classList.add('is-hidden');
-    if (count) count.textContent = docs.length + ' device' + (docs.length===1?'':'s');
+    if (count) count.textContent = devices.length + ' device' + (devices.length===1?'':'s');
     var frag = document.createDocumentFragment();
-    docs.forEach(function(data){
-      var name = data.name || data.device || data.userAgent || 'Unknown device';
-      var last = data.lastSeen || data.updatedAt || data.createdAt;
+    devices.forEach(function(d){
+      var name = d.deviceName || d.name || d.device || d.userAgent || 'Unknown device';
+      var last = d.lastActive || d.lastSeen || d.updatedAt || d.createdAt;
       var row = document.createElement('div');
       row.className = 'entry';
       row.setAttribute('role','listitem');
@@ -54,13 +45,61 @@ async function loadDevices(){
       icon.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v12H3V4zm2 2v8h14V6H5zm4 12h6v2H9v-2z"/></svg>';
       var body = document.createElement('div'); body.className='entry__body';
       var n = document.createElement('div'); n.className='entry__name'; n.textContent = name;
-      var m = document.createElement('div'); m.className='entry__meta'; m.textContent = last ? window.BOG.config.relative(last) : '';
+      var m = document.createElement('div'); m.className='entry__meta'; m.textContent = last ? C.relative(last) : '';
       body.appendChild(n); body.appendChild(m);
       row.appendChild(icon); row.appendChild(body);
+      if (d.deviceId) {
+        var actions = document.createElement('div'); actions.className='entry__actions';
+        var revoke = document.createElement('button'); revoke.type='button';
+        revoke.className='btn btn--sm btn--danger';
+        revoke.textContent='Revoke';
+        revoke.setAttribute('data-revoke', d.deviceId);
+        revoke.setAttribute('data-name', name);
+        revoke.setAttribute('aria-label', 'Revoke ' + name);
+        actions.appendChild(revoke);
+        row.appendChild(actions);
+      }
       frag.appendChild(row);
     });
     list.appendChild(frag);
   }catch(e){
-    var alertEl = document.getElementById('alert'); if(alertEl) window.BOG.alert(alertEl, e.message, 'error');
+    if (e && e.status === 401) { BOG.auth.signOut(); window.location.href = '/auth/login.html'; return; }
+    var alertEl = document.getElementById('alert'); if(alertEl) BOG.alert(alertEl, e.message, 'error');
   }
+}
+
+async function revokeDevice(id, name) {
+  if (!id) return;
+  var ok = await BOG.confirm({
+    title: 'Revoke this device?',
+    body: (name || 'This device') + ' will be signed out and removed. This cannot be undone.',
+    confirmLabel: 'Revoke',
+    danger: true,
+  });
+  if (!ok) return;
+  try{
+    await C.request(C.url('revokeDevice', { deviceId: id }), { method: 'DELETE' });
+    var alertEl = document.getElementById('alert');
+    if (alertEl) BOG.alert(alertEl, 'Device revoked.', 'success');
+    loadDevices();
+  }catch(e){
+    if (e && e.status === 401) { BOG.auth.signOut(); window.location.href = '/auth/login.html'; return; }
+    var alertEl2 = document.getElementById('alert'); if(alertEl2) BOG.alert(alertEl2, e.message, 'error');
+  }
+}
+
+function start() {
+  if (!C.token()) {
+    window.location.href = '/auth/login.html';
+    return;
+  }
+  BOG.mountApp({ search: false });
+  wire();
+  loadDevices();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', start);
+} else {
+  start();
 }

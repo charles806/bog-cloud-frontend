@@ -1,31 +1,17 @@
 /* ==========================================================================
    BOG CLOUD — VAULT
 
-   Rewritten to match the neobrutalist vault.html:
-     - entry-list / skeleton__row exist in app.css (added, not assumed)
+   Backed by the Express backend (/api/v1/vault/entries) instead of Firestore.
+   Passwords are decrypted by the backend on read, so reveal works and nothing
+   here ever holds ciphertext.
+   Behaviour preserved from the previous vault-1.js:
      - rows are DOM nodes, never innerHTML of server data
-     - no inline onclick, no alert/confirm, no classList "open" that never
-       matched the new modal[hidden] stylesheet
-   Behaviour preserved from the old vault-1.js:
-     - Firebase Firestore, collection "vault", field userId == uid
-     - fields site / email / password (tolerates title/username shape too)
-     - auth guard -> /auth/login.html
+     - no inline onclick, no alert/confirm
      - add, edit, delete, reveal
    ========================================================================== */
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-import {
-  getFirestore, collection, addDoc, getDocs, query, where,
-  deleteDoc, doc, updateDoc, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-
 var C = window.BOG.config;
 var BOG = window.BOG;
-
-var app = initializeApp(C.firebase);
-var auth = getAuth(app);
-var db = getFirestore(app);
 
 var currentUser = null;
 var editingId = null;
@@ -67,7 +53,6 @@ function svgPath(d) {
 }
 function iconSvg(name) {
   var inner = icons[name] || '';
-  // icons already contain <path d="...">, inject into wrapper
   return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + inner + '</svg>';
 }
 
@@ -86,7 +71,6 @@ function wire() {
       el.passwordInput.type = isPw ? 'text' : 'password';
       el.revealToggle.setAttribute('aria-pressed', String(isPw));
       el.revealToggle.setAttribute('aria-label', isPw ? 'Hide password' : 'Show password');
-      // keep caret
       el.passwordInput.focus();
       try { var at = el.passwordInput.value.length; el.passwordInput.setSelectionRange(at, at); } catch (e) {}
     });
@@ -106,7 +90,6 @@ function wire() {
       if (BOG.a11y && BOG.a11y.trap) BOG.a11y.trap(el.modal.querySelector('.modal__panel'), e);
     }
   });
-  // delegation for vault list
   if (el.list) {
     el.list.addEventListener('click', function (e) {
       var btn = e.target.closest('button');
@@ -117,11 +100,10 @@ function wire() {
       if (action === 'reveal') toggleReveal(id);
       else if (action === 'edit') {
         var item = vaultItems.find(function (x) { return x.id === id; });
-        if (item) openModal(id, { site: pick(item.data, ['site','title','name']), email: pick(item.data, ['email','username','user']), password: pick(item.data, ['password','pass']) });
+        if (item) openModal(id, { site: pick(item.data, ['siteName','site','title','name']), email: pick(item.data, ['username','email','user']), password: pick(item.data, ['password','pass']) });
       } else if (action === 'delete') handleDelete(id);
     });
   }
-  // shell search filters vault rows
   var search = document.getElementById('shell-search');
   if (search) search.addEventListener('input', function () {
     applySearch(search.value.trim().toLowerCase());
@@ -136,7 +118,7 @@ function applySearch(term) {
   }
   var shown = 0;
   vaultItems.forEach(function (x) {
-    var hay = String(pick(x.data, ['site','title','name']) || '') + ' ' + String(pick(x.data, ['email','username','user']) || '');
+    var hay = String(pick(x.data, ['siteName','site','title','name']) || '') + ' ' + String(pick(x.data, ['username','email','user']) || '');
     var hit = hay.toLowerCase().indexOf(term) !== -1;
     if (x.row) x.row.hidden = !hit;
     if (hit) shown++;
@@ -162,7 +144,6 @@ function openModal(id, data) {
     el.revealToggle.setAttribute('aria-pressed', 'false');
     el.revealToggle.setAttribute('aria-label', 'Show password');
   }
-  // clear field errors
   if (BOG.setFieldError) {
     BOG.setFieldError(el.siteInput, '');
     BOG.setFieldError(el.emailInput, '');
@@ -170,7 +151,6 @@ function openModal(id, data) {
   }
   BOG.clearAlert(el.alert);
   el.modal.hidden = false;
-  // focus first field
   setTimeout(function(){ el.siteInput.focus(); }, 0);
 }
 
@@ -189,15 +169,15 @@ async function handleSave() {
   if (!email) { if (BOG.setFieldError) BOG.setFieldError(el.emailInput, 'Enter a username or email'); valid = false; }
   if (!password) { if (BOG.setFieldError) BOG.setFieldError(el.passwordInput, 'Enter a password'); valid = false; }
   if (!valid) return;
-  if (!currentUser) return;
 
   BOG.busy(el.saveBtn, true, 'Saving…');
   try {
+    var payload = { siteName: site, username: email, password: password };
     if (editingId) {
-      await updateDoc(doc(db, 'vault', editingId), { site: site, email: email, password: password });
+      await C.request(C.url('vaultEntry', { id: editingId }), { method: 'PUT', body: payload });
       BOG.alert(el.alert, 'Password updated.', 'success');
     } else {
-      await addDoc(collection(db, 'vault'), { userId: currentUser.uid, site: site, email: email, password: password, createdAt: serverTimestamp() });
+      await C.request(C.url('vaultEntries'), { method: 'POST', body: payload });
       BOG.alert(el.alert, 'Password saved.', 'success');
     }
     closeModal();
@@ -217,13 +197,12 @@ function toggleReveal(id) {
   input.type = isPw ? 'text' : 'password';
   btn.setAttribute('aria-label', isPw ? 'Hide password' : 'Show password');
   btn.setAttribute('aria-pressed', String(isPw));
-  // swap icon
   btn.innerHTML = isPw ? iconSvg('eyeOff') : iconSvg('eye');
 }
 
 async function handleDelete(id) {
   var item = vaultItems.find(function (x) { return x.id === id; });
-  var label = item ? pick(item.data, ['site','title','name']) : 'this password';
+  var label = item ? pick(item.data, ['siteName','site','title','name']) : 'this password';
   var ok = await BOG.confirm({
     title: 'Delete password?',
     body: 'Delete "' + label + '"? This cannot be undone.',
@@ -232,7 +211,7 @@ async function handleDelete(id) {
   });
   if (!ok) return;
   try {
-    await deleteDoc(doc(db, 'vault', id));
+    await C.request(C.url('vaultEntry', { id: id }), { method: 'DELETE' });
     BOG.alert(el.alert, 'Deleted.', 'success');
     await loadVault();
   } catch (err) {
@@ -241,7 +220,6 @@ async function handleDelete(id) {
 }
 
 async function loadVault() {
-  if (!currentUser) return;
   vaultItems = [];
   if (el.skeleton) el.skeleton.hidden = false;
   if (el.list) { el.list.textContent = ''; }
@@ -249,23 +227,26 @@ async function loadVault() {
   if (el.count) el.count.textContent = '';
 
   try {
-    var q = query(collection(db, 'vault'), where('userId', '==', currentUser.uid));
-    var snap = await getDocs(q);
-
+    var data = await C.expressFetch('vaultEntries');
     if (el.skeleton) el.skeleton.hidden = true;
 
-    var docs = [];
-    snap.forEach(function (d) { docs.push({ id: d.id, data: d.data() }); });
+    var entries = (data && (data.entries || data.data || data)) || [];
+    if (entries && !Array.isArray(entries)) entries = entries.items || [];
+    if (!Array.isArray(entries)) entries = [];
 
-    if (!docs.length) {
+    if (!entries.length) {
       if (el.empty) el.empty.classList.remove('is-hidden');
       if (el.count) el.count.textContent = '0 items';
       return;
     }
 
+    var docs = entries.map(function (e) {
+      return { id: e._id || e.id, data: e };
+    });
     renderList(docs);
   } catch (err) {
     if (el.skeleton) el.skeleton.hidden = true;
+    if (err && err.status === 401) { BOG.auth.signOut(); window.location.href = '/auth/login.html'; return; }
     BOG.alert(el.alert, err.message || 'Could not load vault.', 'error');
   }
 }
@@ -277,8 +258,8 @@ function renderList(docs) {
   docs.forEach(function (entry) {
     var id = entry.id;
     var data = entry.data;
-    var site = pick(data, ['site','title','name']) || 'Untitled';
-    var email = pick(data, ['email','username','user']) || '';
+    var site = pick(data, ['siteName','site','title','name']) || 'Untitled';
+    var email = pick(data, ['username','email','user']) || '';
     var password = pick(data, ['password','pass']) || '';
 
     var row = document.createElement('div');
@@ -301,7 +282,6 @@ function renderList(docs) {
     metaEl.className = 'entry__meta';
     metaEl.textContent = email;
 
-    // password row: masked input + reveal button inline
     var pwWrap = document.createElement('div');
     pwWrap.className = 'reveal';
     pwWrap.style.marginTop = '6px';
@@ -344,7 +324,6 @@ function renderList(docs) {
     editBtn.setAttribute('data-id', id);
     editBtn.setAttribute('aria-label', 'Edit ' + site);
     editBtn.innerHTML = iconSvg('edit');
-    // keep text for a11y but visually icon; add sr-only?
     var editLabel = document.createElement('span');
     editLabel.className = 'sr-only';
     editLabel.textContent = 'Edit';
@@ -382,28 +361,18 @@ function renderList(docs) {
 window.openModal = function(id, data) { openModal(id, data); };
 window.closeModal = function() { closeModal(); };
 
-onAuthStateChanged(auth, function (user) {
-  if (user) {
-    currentUser = user;
-    start();
-    loadVault();
-  } else if (canReuseSession()) {
-    guestShell();
-  } else {
+function startIfReady() {
+  if (!C.token()) {
     window.location.href = '/auth/login.html';
+    return;
   }
-});
-
-/* Signed in via the Express backend (login-1.js) but not into Firebase.
-   Keep the app shell up instead of bouncing these pages to login. */
-function canReuseSession(){
-  return !!(window.BOG && window.BOG.auth && window.BOG.auth.readToken());
-}
-function guestShell(){
-  window.BOG.mountApp({ search: false });
-  var al = document.getElementById('alert');
-  if (al) window.BOG.alert(al, 'You are signed in, but this section needs a Firebase session to load your stored data yet.', 'warning');
+  currentUser = { uid: 'express' };
+  start();
+  loadVault();
 }
 
-// in case auth already resolves before listener
-if (auth.currentUser) { currentUser = auth.currentUser; start(); loadVault(); }
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', startIfReady);
+} else {
+  startIfReady();
+}
