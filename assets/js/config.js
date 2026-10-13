@@ -32,7 +32,7 @@
 
   /* ------------------------------------------------------------------ URLs */
 
-  var apiBase = 'https://bog-cloud-1.onrender.com';
+  var apiBase = 'https://bog-cloud-backend.vercel.app';
 
   var CONFIG = {
     /* Express backend — the primary API. */
