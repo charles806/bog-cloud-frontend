@@ -84,7 +84,7 @@ form.addEventListener('submit', async (event) => {
     if (res.ok) {
       BOG.alert(successBox, 'Account created. Taking you to sign in…', 'success');
       BOG.busy(signupBtn, true, 'Created');
-      setTimeout(() => { window.location.href = '/auth/login.html'; }, 1400);
+      setTimeout(() => { window.location.href = '/auth/login'; }, 1400);
       return;
     }
 

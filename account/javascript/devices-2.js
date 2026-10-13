@@ -15,7 +15,7 @@ onAuthStateChanged(auth, async function(user){
     currentUser = user;
     window.BOG.mountApp({ search: false });
     loadDevices();
-  } else { window.location.href = '/auth/login.html'; }
+  } else { window.location.href = '/auth/login'; }
 });
 
 async function loadDevices(){

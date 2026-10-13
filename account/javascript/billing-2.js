@@ -45,5 +45,5 @@ onAuthStateChanged(auth, async function(user){
       var su = document.getElementById('storageUsed'); if (su) su.textContent = gb + ' GB';
       var bar = document.getElementById('storageBar'); if (bar) { bar.style.width = Math.min((gb / 50 * 100), 100) + '%'; bar.setAttribute('aria-valuenow', String(Math.round(gb/50*100))); }
     }catch(e){}
-  } else { window.location.href = '/auth/login.html'; }
+  } else { window.location.href = '/auth/login'; }
 });

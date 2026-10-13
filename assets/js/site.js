@@ -8,7 +8,7 @@
      - read localStorage['bog_token'] while auth/javascript/login-1.js
        wrote localStorage['token'], so the Dashboard button never appeared
        for any signed-in user
-     - linked to "dashboard.html" from the site root, a 404
+     - linked to "dashboard" from the site root, a 404
    ========================================================================== */
 
 (function (global) {
@@ -31,11 +31,11 @@
     var slot = document.getElementById('nav-auth');
     if (!slot) return;
     if (signedIn()) {
-      slot.innerHTML = '<a class="btn btn--ghost" href="/auth/login.html">Sign in</a>' +
-                       '<a class="btn btn--primary" href="/dashboard/dashboard.html">Dashboard</a>';
+      slot.innerHTML = '<a class="btn btn--ghost" href="/auth/login">Sign in</a>' +
+                       '<a class="btn btn--primary" href="/dashboard/dashboard">Dashboard</a>';
     } else {
-      slot.innerHTML = '<a class="btn btn--ghost" href="/auth/login.html">Sign in</a>' +
-                       '<a class="btn btn--primary" href="/auth/signup.html">Start free</a>';
+      slot.innerHTML = '<a class="btn btn--ghost" href="/auth/login">Sign in</a>' +
+                       '<a class="btn btn--primary" href="/auth/signup">Start free</a>';
     }
   }
 

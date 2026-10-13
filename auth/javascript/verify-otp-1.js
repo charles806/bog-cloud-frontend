@@ -12,7 +12,7 @@
    What changed:
      - the two buttons moved from inline onclick handlers to listeners
      - the dead "onclick + href" pairing is gone: the original had
-       <a href="#" onclick="window.location.href='verify-otp.html'">, so the
+       <a href="#" onclick="window.location.href='verify-otp'">, so the
        link's own destination and the script's destination were both present
        and the anchor's was a no-op that also jumped the scroll position
      - messages are announced through BOG.alert()
@@ -42,11 +42,11 @@ onAuthStateChanged(auth, (user) => {
 
     if (user.emailVerified) {
       BOG.alert(errorBox, 'Already verified. Taking you to your drive…', 'success');
-      setTimeout(() => { window.location.href = '/dashboard/dashboard.html'; }, 1000);
+      setTimeout(() => { window.location.href = '/dashboard/dashboard'; }, 1000);
     }
   } else {
     BOG.alert(errorBox, 'Your session expired. Sign up again to continue.', 'error');
-    setTimeout(() => { window.location.href = '/auth/signup.html'; }, 1500);
+    setTimeout(() => { window.location.href = '/auth/signup'; }, 1500);
   }
 });
 
@@ -68,7 +68,7 @@ checkBtn.addEventListener('click', async () => {
     if (currentUser.emailVerified) {
       BOG.alert(errorBox, 'Email verified. Taking you to your drive…', 'success');
       BOG.busy(checkBtn, true, 'Verified');
-      setTimeout(() => { window.location.href = '/dashboard/dashboard.html'; }, 900);
+      setTimeout(() => { window.location.href = '/dashboard/dashboard'; }, 900);
     } else {
       BOG.alert(errorBox, 'Not verified yet. Open the link in the email, then check again.', 'warning');
       BOG.busy(checkBtn, false);
@@ -107,5 +107,5 @@ goSignup.addEventListener('click', async (event) => {
   event.preventDefault();
   goSignup.setAttribute('aria-disabled', 'true');
   await signOut(auth);
-  window.location.href = '/auth/signup.html';
+  window.location.href = '/auth/signup';
 });

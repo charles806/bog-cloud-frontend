@@ -400,10 +400,16 @@ for (const file of pages.sort()) {
     }
   }
 
-  /* Referenced local assets must exist AND be non-empty */
+  /* Referenced local assets must exist AND be non-empty. Links are written
+     extensionless (the host sets cleanUrls: true), so an extensionless path is
+     resolved to its .html file the same way the host would. */
   const refs = [...html.matchAll(/(?:src|href)="(\/[^"#?]+)"/g)].map((m) => m[1]);
   for (const r of new Set(refs)) {
-    const p = join(ROOT, decodeURIComponent(r));
+    let p = join(ROOT, decodeURIComponent(r));
+    if (!existsSync(p) && !/\.[a-z0-9]+$/i.test(r)) {
+      const page = join(ROOT, decodeURIComponent(r) + '.html');
+      if (existsSync(page)) p = page;
+    }
     if (!existsSync(p)) issues.push(`missing asset ${r}`);
     else if (statSync(p).size === 0) issues.push(`EMPTY asset ${r}`);
   }

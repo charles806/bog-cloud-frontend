@@ -141,5 +141,5 @@ window.emptyTrash = emptyTrash;
 
 onAuthStateChanged(auth, function(user){
   if (user){ currentUser=user; start(); }
-  else window.location.href='/auth/login.html';
+  else window.location.href='/auth/login';
 });

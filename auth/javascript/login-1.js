@@ -65,7 +65,7 @@ form.addEventListener('submit', async (event) => {
       if (data.user) localStorage.setItem('user', JSON.stringify(data.user));
 
       BOG.alert(alertBox, 'Signed in. Taking you to your drive…', 'success');
-      setTimeout(() => { window.location.href = '/dashboard/dashboard.html'; }, 900);
+      setTimeout(() => { window.location.href = '/dashboard/dashboard'; }, 900);
       return;
     }
 

@@ -388,7 +388,7 @@ onAuthStateChanged(auth, function (user) {
     start();
     loadVault();
   } else {
-    window.location.href = '/auth/login.html';
+    window.location.href = '/auth/login';
   }
 });
 

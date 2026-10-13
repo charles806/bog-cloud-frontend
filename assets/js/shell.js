@@ -35,25 +35,25 @@
     {
       label: 'Cloud',
       items: [
-        { href: '/dashboard/dashboard.html', label: 'My Drive', icon: 'folder' },
-        { href: '/dashboard/vault.html',     label: 'Vault',    icon: 'shield' },
-        { href: '/dashboard/trash.html',     label: 'Trash',    icon: 'trash' }
+        { href: '/dashboard/dashboard', label: 'My Drive', icon: 'folder' },
+        { href: '/dashboard/vault',     label: 'Vault',    icon: 'shield' },
+        { href: '/dashboard/trash',     label: 'Trash',    icon: 'trash' }
       ]
     },
     {
       label: 'Developer',
       items: [
-        { href: '/dashboard/api-keys.html', label: 'API Keys', icon: 'key' },
-        { href: '/dashboard/api-docs.html', label: 'API Docs', icon: 'book' }
+        { href: '/dashboard/api-keys', label: 'API Keys', icon: 'key' },
+        { href: '/dashboard/api-docs', label: 'API Docs', icon: 'book' }
       ]
     },
     {
       label: 'Account',
       items: [
-        { href: '/account/profile.html',  label: 'Profile',  icon: 'user' },
-        { href: '/account/billing.html',  label: 'Billing',  icon: 'card' },
-        { href: '/account/devices.html',  label: 'Devices',  icon: 'monitor' },
-        { href: '/account/sessions.html', label: 'Sessions', icon: 'lock' }
+        { href: '/account/profile',  label: 'Profile',  icon: 'user' },
+        { href: '/account/billing',  label: 'Billing',  icon: 'card' },
+        { href: '/account/devices',  label: 'Devices',  icon: 'monitor' },
+        { href: '/account/sessions', label: 'Sessions', icon: 'lock' }
       ]
     }
   ];
@@ -65,22 +65,22 @@
     {
       label: 'Overview',
       items: [
-        { href: '/admin/admin-dashboard.html', label: 'Dashboard',  icon: 'grid' },
-        { href: '/admin/analytics.html',      label: 'Analytics',  icon: 'chart' }
+        { href: '/admin/admin-dashboard', label: 'Dashboard',  icon: 'grid' },
+        { href: '/admin/analytics',      label: 'Analytics',  icon: 'chart' }
       ]
     },
     {
       label: 'People',
       items: [
-        { href: '/admin/users.html',       label: 'Users',        icon: 'user' },
-        { href: '/admin/manage-users.html', label: 'Manage users', icon: 'user' }
+        { href: '/admin/users',       label: 'Users',        icon: 'user' },
+        { href: '/admin/manage-users', label: 'Manage users', icon: 'user' }
       ]
     },
     {
       label: 'Platform',
       items: [
-        { href: '/admin/storage-analysis.html', label: 'Storage analysis', icon: 'chart' },
-        { href: '/admin/billing.html',          label: 'Billing',          icon: 'card' }
+        { href: '/admin/storage-analysis', label: 'Storage analysis', icon: 'chart' },
+        { href: '/admin/billing',          label: 'Billing',          icon: 'card' }
       ]
     }
   ];
@@ -311,7 +311,7 @@
         'aria-label="Close navigation">' + icon('close') + '</button>' +
       groups +
       '<div class="sidebar__group">' +
-        '<a class="btn btn--ghost btn--block" href="/auth/login.html" data-signout>' +
+        '<a class="btn btn--ghost btn--block" href="/auth/login" data-signout>' +
           icon('lock') + '<span>Sign out</span></a>' +
       '</div>';
 
@@ -340,9 +340,9 @@
               '<div class="menu-anchor__name">' + esc(user.name || '') + '</div>' +
               '<div class="menu-anchor__email">' + esc(user.email || '') + '</div>' +
             '</div>' +
-            '<a class="menu__item" role="menuitem" href="/account/profile.html">Account settings</a>' +
-            '<a class="menu__item" role="menuitem" href="/dashboard/dashboard.html">Go to drive</a>' +
-            '<a class="menu__item menu__item--danger" role="menuitem" href="/auth/login.html" ' +
+            '<a class="menu__item" role="menuitem" href="/account/profile">Account settings</a>' +
+            '<a class="menu__item" role="menuitem" href="/dashboard/dashboard">Go to drive</a>' +
+            '<a class="menu__item menu__item--danger" role="menuitem" href="/auth/login" ' +
               'data-signout>Sign out</a>' +
           '</div>' +
         '</div>';
@@ -352,7 +352,7 @@
       '<button type="button" class="icon-btn icon-btn--plain is-hidden" id="shell-drawer" ' +
         'aria-expanded="false" aria-controls="shell-sidebar" aria-label="Open navigation">' +
         icon('menu') + '</button>' +
-      '<a class="topbar__brand" href="/index.html">' +
+      '<a class="topbar__brand" href="/">' +
         /* assets/images/logo.PNG is 33KB. images/logo.jpeg is 2.1MB and was
            loaded by 13 pages — 28MB across the site for one wordmark. */
         '<img class="topbar__mark" src="/assets/images/logo.PNG" alt="" width="34" height="34" ' +
@@ -469,7 +469,7 @@
     if (!link) return;
     e.preventDefault();
     signOut();
-    global.location.href = link.getAttribute('href') || '/auth/login.html';
+    global.location.href = link.getAttribute('href') || '/auth/login';
   });
 
   /* Called by every signed-in page. Reads nav family off <body data-nav>. */
@@ -487,9 +487,9 @@
             '<p class="page__sub">This area is restricted to BOG Cloud ' +
               'administrators. If you believe that is wrong, sign in with an ' +
               'administrator account.</p>' +
-            '<div class="cluster"><a class="btn btn--primary" href="/dashboard/dashboard.html">' +
+            '<div class="cluster"><a class="btn btn--primary" href="/dashboard/dashboard">' +
               'Back to my drive</a>' +
-              '<a class="btn btn--ghost" href="/auth/login.html">Sign in</a></div>' +
+              '<a class="btn btn--ghost" href="/auth/login">Sign in</a></div>' +
           '</div>';
       }
       return null;
