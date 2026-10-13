@@ -60,9 +60,16 @@ form.addEventListener('submit', async (event) => {
 
     const data = await res.json().catch(() => ({}));
 
-    if (res.ok && data.token) {
-      localStorage.setItem('token', data.token);
-      if (data.user) localStorage.setItem('user', JSON.stringify(data.user));
+    /* The backend wraps the payload under `data` (accessToken/refreshToken/user).
+       Accept that shape and the older flat shape so one missing field cannot
+       turn a successful sign-in into a "did not match" error. */
+    const body = data && data.data ? data.data : data;
+    const token = body.accessToken || body.token;
+    const user = body.user;
+
+    if (res.ok && token) {
+      localStorage.setItem('token', token);
+      if (user) localStorage.setItem('user', JSON.stringify(user));
 
       BOG.alert(alertBox, 'Signed in. Taking you to your drive…', 'success');
       setTimeout(() => { window.location.href = '/dashboard/dashboard.html'; }, 900);
