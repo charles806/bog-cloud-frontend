@@ -139,7 +139,19 @@ window.restoreFile = restoreFile;
 window.deletePermanent = deletePermanent;
 window.emptyTrash = emptyTrash;
 
+/* Signed in via the Express backend (login-1.js) but not into Firebase.
+   Keep the app shell up instead of bouncing these pages to login. */
+function canReuseSession(){
+  return !!(window.BOG && window.BOG.auth && window.BOG.auth.readToken());
+}
+function guestShell(){
+  window.BOG.mountApp({ search: false });
+  var al = document.getElementById('alert');
+  if (al) window.BOG.alert(al, 'You are signed in, but this section needs a Firebase session to load your stored data yet.', 'warning');
+}
+
 onAuthStateChanged(auth, function(user){
   if (user){ currentUser=user; start(); }
+  else if (canReuseSession()) guestShell();
   else window.location.href='/auth/login.html';
 });

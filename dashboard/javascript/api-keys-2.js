@@ -85,5 +85,10 @@ async function loadKeys(){
 
 onAuthStateChanged(auth, async (user) => {
   if(user){ idToken = await user.getIdToken(); document.getElementById('userAvatar').textContent = user.email[0].toUpperCase(); loadKeys(); }
+  else if (window.BOG && window.BOG.auth && window.BOG.auth.readToken()) {
+    window.BOG.mountApp({ search: false });
+    var al = document.getElementById('errorBox');
+    if (al) al.innerHTML = '<p>You are signed in, but API keys require a Firebase session to load yet.</p>';
+  }
   else window.location = '/auth/login.html';
 });

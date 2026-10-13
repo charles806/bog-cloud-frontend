@@ -14,6 +14,17 @@ onAuthStateChanged(auth, async function(user){
     window.BOG.mountApp({ search: false });
     wire();
     loadSessions();
+  } else if (window.BOG.auth && window.BOG.auth.readToken()) {
+    window.BOG.mountApp({ search: false });
+    wire();
+    var list = document.getElementById('sessionsList');
+    var empty = document.getElementById('sessionsEmpty');
+    var count = document.getElementById('sessionsCount');
+    if (list) list.textContent = '';
+    if (count) count.textContent = '—';
+    if (empty) empty.classList.remove('is-hidden');
+    var al = document.getElementById('alert');
+    if (al) window.BOG.alert(al, 'You are signed in, but this section needs a Firebase session to read your sessions.', 'warning');
   } else { window.location.href = '/auth/login.html'; }
 });
 

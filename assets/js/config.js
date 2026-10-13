@@ -50,9 +50,9 @@
       register:   '/auth/register',
       me:         '/auth/me',
       mfaVerify:  '/auth/mfa/verify',
-      files:      '/files',
-      fileUpload: '/files/upload',
-      stats:      '/stats'
+      files:      '/storage/files',
+      fileUpload: '/storage/upload',
+      stats:      '/storage/stats'
     },
 
     /* ------------------------------------------------------------------

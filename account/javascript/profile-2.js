@@ -118,6 +118,10 @@ onAuthStateChanged(auth, function(user){
     var dn=document.getElementById('displayName'); if(dn) dn.textContent = name;
     var de=document.getElementById('displayEmail'); if(de) de.textContent = user.email;
     var ni=document.getElementById('newNameInput'); if(ni) ni.value = name;
+  } else if (window.BOG.auth && window.BOG.auth.readToken()) {
+    wire();
+    var al=document.getElementById('alertBox') || document.getElementById('alert');
+    if (al) window.BOG.alert(al, 'You are signed in, but profile changes require a Firebase session yet.', 'warning');
   } else {
     window.location.href = '/auth/login.html';
   }

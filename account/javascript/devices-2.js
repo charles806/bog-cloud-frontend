@@ -15,6 +15,14 @@ onAuthStateChanged(auth, async function(user){
     currentUser = user;
     window.BOG.mountApp({ search: false });
     loadDevices();
+  } else if (window.BOG.auth && window.BOG.auth.readToken()) {
+    window.BOG.mountApp({ search: false });
+    var empty = document.getElementById('devicesEmpty');
+    var count = document.getElementById('devicesCount');
+    if (empty) empty.classList.remove('is-hidden');
+    if (count) count.textContent = '—';
+    var al = document.getElementById('alert');
+    if (al) window.BOG.alert(al, 'You are signed in, but this section needs a Firebase session to read your devices.', 'warning');
   } else { window.location.href = '/auth/login.html'; }
 });
 

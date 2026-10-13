@@ -45,5 +45,9 @@ onAuthStateChanged(auth, async function(user){
       var su = document.getElementById('storageUsed'); if (su) su.textContent = gb + ' GB';
       var bar = document.getElementById('storageBar'); if (bar) { bar.style.width = Math.min((gb / 50 * 100), 100) + '%'; bar.setAttribute('aria-valuenow', String(Math.round(gb/50*100))); }
     }catch(e){}
+  } else if (window.BOG.auth && window.BOG.auth.readToken()) {
+    wire();
+    var al = document.getElementById('alertBox') || document.getElementById('alert');
+    if (al) window.BOG.alert(al, 'You are signed in, but billing data requires a Firebase session yet.', 'warning');
   } else { window.location.href = '/auth/login.html'; }
 });

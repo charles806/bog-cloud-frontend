@@ -106,6 +106,10 @@ onAuthStateChanged(auth, function(user){
     currentUser = user;
     start();
     if (editId) loadEntry(editId);
+  } else if (window.BOG && window.BOG.auth && window.BOG.auth.readToken()) {
+    window.BOG.mountApp({ search: false });
+    var al = document.getElementById('alert');
+    if (al) window.BOG.alert(al, 'You are signed in, but this section needs a Firebase session to load your stored data yet.', 'warning');
   } else {
     window.location.href = '/auth/login.html';
   }
