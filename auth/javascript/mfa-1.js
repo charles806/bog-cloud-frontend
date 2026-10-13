@@ -50,7 +50,7 @@ onAuthStateChanged(auth, (user) => {
     if (emailEl) emailEl.textContent = user.email;
   } else {
     BOG.alert(errorBox, 'Your session expired. Sign in again to continue.', 'error');
-    setTimeout(() => { window.location.href = '/auth/login'; }, 1500);
+    setTimeout(() => { window.location.href = '/auth/login.html'; }, 1500);
   }
 });
 
@@ -88,7 +88,7 @@ form.addEventListener('submit', async (event) => {
     if (res.ok) {
       BOG.alert(errorBox, 'Verified. Taking you to your drive…', 'success');
       BOG.busy(verifyBtn, true, 'Verified');
-      setTimeout(() => { window.location.href = '/dashboard/dashboard'; }, 900);
+      setTimeout(() => { window.location.href = '/dashboard/dashboard.html'; }, 900);
       return;
     }
 

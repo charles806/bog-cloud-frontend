@@ -75,5 +75,5 @@ form.addEventListener('submit', async (event) => {
 
   BOG.alert(errorBox, NEUTRAL, 'success');
   BOG.busy(resetBtn, true, 'Sent');
-  setTimeout(() => { window.location.href = '/auth/login'; }, 2600);
+  setTimeout(() => { window.location.href = '/auth/login.html'; }, 2600);
 });

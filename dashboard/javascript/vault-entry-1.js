@@ -91,7 +91,7 @@ async function saveEntry(){
   try{
     if (editId){ await updateDoc(doc(db, "vault", editId), data); }
     else { await addDoc(collection(db, "vault"), Object.assign({}, data, { createdAt: serverTimestamp()})); }
-    window.location.href = 'vault';
+    window.location.href = 'vault.html';
   }catch(err){
     BOG.alert(el.alert, err.message || 'Could not save.', 'error');
     BOG.busy(el.saveBtn, false);
@@ -107,6 +107,6 @@ onAuthStateChanged(auth, function(user){
     start();
     if (editId) loadEntry(editId);
   } else {
-    window.location.href = '/auth/login';
+    window.location.href = '/auth/login.html';
   }
 });

@@ -85,5 +85,5 @@ async function loadKeys(){
 
 onAuthStateChanged(auth, async (user) => {
   if(user){ idToken = await user.getIdToken(); document.getElementById('userAvatar').textContent = user.email[0].toUpperCase(); loadKeys(); }
-  else window.location = '/auth/login';
+  else window.location = '/auth/login.html';
 });

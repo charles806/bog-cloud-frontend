@@ -14,7 +14,7 @@ onAuthStateChanged(auth, async function(user){
     window.BOG.mountApp({ search: false });
     wire();
     loadSessions();
-  } else { window.location.href = '/auth/login'; }
+  } else { window.location.href = '/auth/login.html'; }
 });
 
 function wire(){

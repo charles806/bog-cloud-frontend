@@ -69,7 +69,7 @@
 
   function start() {
     if (!C.token()) {
-      go('/auth/login');
+      go('/auth/login.html');
       return;
     }
 
@@ -111,7 +111,7 @@
 
   function endSession() {
     BOG.auth.signOut();
-    go('/auth/login');
+    go('/auth/login.html');
   }
 
   /* --------------------------------------------------------------- wiring */

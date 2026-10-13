@@ -54,7 +54,7 @@ function wire() {
 async function logout() {
   try { await signOut(auth); } catch(e) {}
   BOGNS.auth.signOut();
-  window.location.href = '/';
+  window.location.href = '/index.html';
 }
 
 async function saveName() {
@@ -119,6 +119,6 @@ onAuthStateChanged(auth, function(user){
     var de=document.getElementById('displayEmail'); if(de) de.textContent = user.email;
     var ni=document.getElementById('newNameInput'); if(ni) ni.value = name;
   } else {
-    window.location.href = '/auth/login';
+    window.location.href = '/auth/login.html';
   }
 });
